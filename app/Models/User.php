@@ -31,6 +31,8 @@ class User extends Authenticatable
         'last_login_at',
     ];
 
+    protected $guarded = ['is_admin'];
+
     /**
      * The attributes that should be hidden for serialization.
      *
