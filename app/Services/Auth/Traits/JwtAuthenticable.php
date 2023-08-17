@@ -2,31 +2,46 @@
 
 namespace App\Services\Auth\Traits;
 
+use Illuminate\Support\Str;
 use Firebase\JWT\JWT;
+use App\Models\JwtToken;
 
 trait JwtAuthenticable
 {
 
-    public function createToken()
+    public function createToken(string $title)
     {
-        return JWT::encode([
+        $uniqueId = $this->generateUniqueId();
+        $token = JWT::encode([
             'iss' => config('app.url'),
             'aud' => config('app.url'),
             'iat' => now()->getTimestamp(),
             'nbf' => now()->getTimestamp(),
+            'sub' => $this->id,
             'user_uuid' => $this->uuid,
+            'unique_id' => $uniqueId
         ], config('jwt.key.private'), 'RS256');
+        $this->tokens()->create([
+            'token_title' => $title,
+            'unique_id' => $uniqueId,
+            'last_used_at' => now(),
+        ]);
+        return $token;
     }
-    /**
-     * Retrieve a user by their unique identifier
-     * @param mixed $identifier
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
-     */
-    public function retrieveById($identifier)
+
+    private function generateUniqueId()
     {
-        if (static::where('uuid', $identifier)->exists()) {
-            return static::where('uuid', $identifier)->first();
-        }
-        return null;
+        $uniqueId = Str::uuid();
+        return Str::replace('-', '', $uniqueId);
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return 'uuid';
+    }
+
+    public function tokens()
+    {
+        return $this->hasMany(JwtToken::class);
     }
 }

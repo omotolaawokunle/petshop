@@ -2,7 +2,6 @@
 
 namespace App\Services\Auth\Guards;
 
-use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\UserProvider;
@@ -10,6 +9,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Auth\GuardHelpers;
 use Firebase\JWT\Key;
 use Firebase\JWT\JWT;
+use App\Models\JwtToken;
 
 class JwtGuard implements Guard
 {
@@ -47,13 +47,28 @@ class JwtGuard implements Guard
         }
 
         try {
-            $token = (array) JWT::decode($this->getTokenForRequest(), new Key(config('jwt.key.public'), 'RS256'));
-
-            return $this->user = $this->provider->retrieveById($token['user_uuid']);
+            return $this->user = $this->validateToken();
         } catch (\Exception $e) {
             Log::error($e);
             return $this->user = null;
         }
+    }
+
+    /**
+     * Check if token is valid and return user
+     *
+     * @return void
+     */
+    protected function validateToken()
+    {
+        $token = (array) JWT::decode($this->getTokenForRequest(), new Key(config('jwt.key.public'), 'RS256'));
+        if ($user = $this->provider->retrieveById($token['user_uuid'])) {
+            if ($savedToken = JwtToken::where('user_id', $user->id)->where('unique_id', $token['unique_id'])->first()) {
+                $savedToken->update(['last_used_at' => now()]);
+                return $user;
+            }
+        }
+        return null;
     }
 
     /**
@@ -83,5 +98,14 @@ class JwtGuard implements Guard
         }
 
         return false;
+    }
+
+    public function logout()
+    {
+        $token = (array) JWT::decode($this->getTokenForRequest(), new Key(config('jwt.key.public'), 'RS256'));
+
+        JwtToken::where('unique_id', $token['unique_id'])->where('user_id', $this->user()->id)->delete();
+        $this->user = null;
+        return;
     }
 }
