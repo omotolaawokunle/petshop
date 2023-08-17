@@ -2,11 +2,13 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use App\Services\Traits\Responsable;
 
 class Handler extends ExceptionHandler
 {
+    use Responsable;
     /**
      * The list of the inputs that are never flashed to the session on validation exceptions.
      *
@@ -23,6 +25,15 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
+
+        $this->renderable(function (\Illuminate\Validation\ValidationException $e) {
+            return $this->validationError($e->errors());
+        });
+
+        $this->reportable(function (\Illuminate\Validation\ValidationException $e) {
+            return $this->validationError($e->errors());
+        });
+
         $this->reportable(function (Throwable $e) {
             //
         });
