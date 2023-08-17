@@ -49,4 +49,43 @@ class AuthControllerTest extends TestCase
             'data' => []
         ]);
     }
+
+    public function test_admin_cannot_login_with_wrong_credentials()
+    {
+        User::factory()->create([
+            'is_admin' => true,
+        ]);
+
+        $response = $this->postJson(route('api.v1.admin.login'), [
+            'email' => 'nonexistent@example.com',
+            'password' => 'wrongpassword',
+        ]);
+
+        $response->assertStatus(ResponseCodes::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJson([
+            'success' => 0,
+            'error' => 'Failed to authenticate user!',
+            'errors' => [],
+            'data' => []
+        ]);
+    }
+
+    public function test_admin_can_logout()
+    {
+        $admin = User::factory()->create([
+            'is_admin' => true,
+        ]);
+
+        $token = $admin->createToken('test-auth');
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->postJson(route('api.v1.admin.logout'));
+        $response->assertStatus(ResponseCodes::HTTP_OK);
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->postJson(route('api.v1.admin.logout'));
+        $response->assertStatus(ResponseCodes::HTTP_UNAUTHORIZED);
+    }
 }

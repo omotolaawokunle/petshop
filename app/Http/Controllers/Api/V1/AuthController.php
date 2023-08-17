@@ -14,10 +14,11 @@ class AuthController extends Controller
     {
         if (Auth::attempt($request->validated())) {
             /** @var \App\Models\User $user */
-            $user =  Auth::user();
+            $user = auth()->user();
             if ($user->is_admin) {
+                $user->update(['last_login_at' => now()]);
                 return $this->success(data: [
-                    'token' => $user->createToken(),
+                    'token' => $user->createToken("admin-auth"),
                 ]);
             }
         }
@@ -25,5 +26,11 @@ class AuthController extends Controller
             message: "Failed to authenticate user!",
             statusCode: ResponseCodes::HTTP_UNPROCESSABLE_ENTITY
         );
+    }
+
+    public function adminLogout()
+    {
+        Auth::logout();
+        return $this->success(data: []);
     }
 }

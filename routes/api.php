@@ -19,6 +19,7 @@ Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
     Route::prefix('/admin')->name('admin.')->group(function () {
         Route::post('/login', [AuthController::class, 'adminLogin'])->name('login');
         Route::middleware(['auth:api', 'is_admin'])->group(function () {
+            Route::post('/logout', [AuthController::class, 'adminLogout'])->name('logout');
         });
     });
 });
