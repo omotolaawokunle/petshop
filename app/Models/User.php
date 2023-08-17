@@ -8,11 +8,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Services\Traits\HasUuids;
+use App\Services\Traits\Filterable;
 use App\Services\Auth\Traits\JwtAuthenticable;
 
 class User extends Authenticatable
 {
-    use JwtAuthenticable, HasFactory, Notifiable, HasUuids;
+    use JwtAuthenticable, HasFactory, Notifiable, HasUuids, Filterable;
 
     /**
      * The attributes that are mass assignable.
