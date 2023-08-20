@@ -88,4 +88,39 @@ class AuthControllerTest extends TestCase
         ])->postJson(route('api.v1.admin.logout'));
         $response->assertStatus(ResponseCodes::HTTP_UNAUTHORIZED);
     }
+
+    public function test_user_can_login()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->postJson(route('api.v1.user.login'), [
+            'email' => $user->email,
+            'password' => 'userpassword',
+        ]);
+
+        $response->assertOk();
+        $response->assertJsonStructure([
+            'data' => [
+                'token',
+            ],
+        ]);
+    }
+
+    public function test_user_cannot_login_with_wrong_credentials()
+    {
+        User::factory()->create();
+
+        $response = $this->postJson(route('api.v1.user.login'), [
+            'email' => 'nonexistent@example.com',
+            'password' => 'wrongpassword',
+        ]);
+
+        $response->assertStatus(ResponseCodes::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJson([
+            'success' => 0,
+            'error' => 'Failed to authenticate user!',
+            'errors' => [],
+            'data' => []
+        ]);
+    }
 }

@@ -14,7 +14,7 @@ class AuthController extends Controller
     {
         if (Auth::attempt($request->validated())) {
             /** @var \App\Models\User $user */
-            $user = auth()->user();
+            $user = Auth::user();
             if ($user->is_admin) {
                 $user->update(['last_login_at' => now()]);
                 return $this->success(data: [
@@ -32,5 +32,21 @@ class AuthController extends Controller
     {
         Auth::logout();
         return $this->success(data: []);
+    }
+
+    public function userLogin(LoginRequest $request)
+    {
+        if (Auth::attempt($request->validated())) {
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+            $user->update(['last_login_at' => now()]);
+            return $this->success(data: [
+                'token' => $user->createToken("admin-auth"),
+            ]);
+        }
+        return $this->error(
+            message: "Failed to authenticate user!",
+            statusCode: ResponseCodes::HTTP_UNPROCESSABLE_ENTITY
+        );
     }
 }
