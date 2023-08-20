@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\GuardHelpers;
 use Firebase\JWT\Key;
 use Firebase\JWT\JWT;
@@ -40,7 +41,7 @@ class JwtGuard implements Guard
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function user()
+    public function user(): ?Authenticatable
     {
         if (!is_null($this->user)) {
             return $this->user;
@@ -61,6 +62,8 @@ class JwtGuard implements Guard
      */
     protected function validateToken()
     {
+        $bearerToken = $this->getTokenForRequest();
+        if (is_null($bearerToken)) return null;
         $token = (array) JWT::decode($this->getTokenForRequest(), new Key(config('jwt.key.public'), 'RS256'));
         if ($user = $this->provider->retrieveById($token['user_uuid'])) {
             if ($savedToken = JwtToken::where('user_id', $user->id)->where('unique_id', $token['unique_id'])->first()) {
@@ -76,7 +79,7 @@ class JwtGuard implements Guard
      *
      * @return string
      */
-    public function getTokenForRequest()
+    public function getTokenForRequest(): ?string
     {
         return $this->request->bearerToken();
     }
