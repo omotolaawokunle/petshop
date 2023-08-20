@@ -69,4 +69,47 @@ class AdminControllerTest extends TestCase
             ],
         ]);
     }
+
+    public function test_admin_can_create_admin_account_with_valid_data()
+    {
+        $this->withoutExceptionHandling();
+        $this->loginAsAdmin();
+        $adminData = [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'email' => 'johndoe@example.com',
+            'address' => '1 White Ave GRA',
+            'phone_number' => '2348190234923',
+            'password' => 'userpassword',
+            'password_confirmation' => 'userpassword',
+            'marketing' => 0,
+        ];
+
+        $response = $this->withToken($this->token)->postJson(route('api.v1.admin.create'), $adminData);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('users', [
+            'email' => $adminData['email'],
+        ]);
+    }
+
+    public function test_admin_cannot_create_user_with_invalid_data()
+    {
+        $this->loginAsAdmin();
+        $invalidAdminData = [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'email' => 'johndoe',
+            'address' => '1 White Ave GRA',
+            'phone_number' => '2348190234923',
+            'password' => 'userpassword',
+            'marketing' => 0,
+        ];
+
+        $response = $this->withToken($this->token)->postJson(route('api.v1.admin.create'), $invalidAdminData);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors([
+            'email', 'password'
+        ]);
+    }
 }

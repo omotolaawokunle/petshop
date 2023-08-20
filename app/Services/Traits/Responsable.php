@@ -39,7 +39,7 @@ trait Responsable
     public function validationError($errors = [])
     {
         return $this->error(
-            message: "Validation Error",
+            message: "Failed Validation",
             errors: $errors,
             statusCode: ResponseCodes::HTTP_UNPROCESSABLE_ENTITY
         );
