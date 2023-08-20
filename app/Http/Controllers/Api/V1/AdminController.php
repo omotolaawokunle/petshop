@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\V1;
 use Illuminate\Http\Request;
 use App\Services\Filters\UserFilter;
 use App\Models\User;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\AdminResource;
+use App\Http\Requests\UserRequest;
 use App\Http\Requests\AdminRequest;
 use App\Http\Controllers\Controller;
 
@@ -32,19 +34,12 @@ class AdminController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Update user account.
      */
-    public function show(User $user)
+    public function updateUser(UserRequest $request, User $user)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
+        $user->update($request->toArray());
+        return $this->success(new UserResource($user));
     }
 
     /**
