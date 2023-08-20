@@ -23,6 +23,7 @@ Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
             Route::get('/user-listing', [AdminController::class, 'getUserListing'])->name('user-listing');
             Route::post('/create', [AdminController::class, 'store'])->name('create');
             Route::put('/user-edit/{user}', [AdminController::class, 'updateUser'])->name('users.edit');
+            Route::delete('/user-delete/{user}', [AdminController::class, 'destroyUser'])->name('users.delete');
             Route::post('/logout', [AuthController::class, 'adminLogout'])->name('logout');
         });
     });

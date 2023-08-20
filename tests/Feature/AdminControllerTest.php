@@ -86,7 +86,7 @@ class AdminControllerTest extends TestCase
 
         $response = $this->withToken($this->token)->postJson(route('api.v1.admin.create'), $adminData);
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $this->assertDatabaseHas('users', [
             'email' => $adminData['email'],
         ]);
@@ -132,7 +132,7 @@ class AdminControllerTest extends TestCase
 
         $response = $this->withToken($this->token)->putJson(route('api.v1.admin.users.edit', ['user' => $user->uuid]), $adminData);
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $this->assertDatabaseHas('users', [
             'email' => $adminData['email'],
         ]);
@@ -159,6 +159,36 @@ class AdminControllerTest extends TestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors([
             'email', 'password'
+        ]);
+    }
+
+    public function test_admin_can_delete_valid_user_account()
+    {
+        $user = User::factory()->create([
+            'first_name' => 'Jane',
+            'email' => 'janedoe@example.com',
+        ]);
+        $this->loginAsAdmin();
+        $response = $this->withToken($this->token)->deleteJson(route('api.v1.admin.users.delete', ['user' => $user->uuid]));
+
+        $response->assertOk();
+        $this->assertDatabaseMissing('users', [
+            'email' => $user->email,
+        ]);
+    }
+
+    public function test_admin_cannot_delete_invalid_user_account()
+    {
+        $user = User::factory()->create([
+            'first_name' => 'Jane',
+            'email' => 'janedoe@example.com',
+        ]);
+        $this->loginAsAdmin();
+        $response = $this->withToken($this->token)->deleteJson(route('api.v1.admin.users.delete', ['user' => $user->uuid . "ab"]));
+
+        $response->assertStatus(404);
+        $this->assertDatabaseHas('users', [
+            'email' => $user->email,
         ]);
     }
 }
