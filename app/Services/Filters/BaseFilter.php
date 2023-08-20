@@ -10,7 +10,7 @@ class BaseFilter
 {
     protected Builder $builder;
 
-    public function __construct(protected readonly Request $request)
+    public function __construct(protected Request $request)
     {
     }
 

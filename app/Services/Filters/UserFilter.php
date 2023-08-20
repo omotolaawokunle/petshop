@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class UserFilter extends BaseFilter
 {
 
-    public function __construct(protected readonly Request $request)
+    public function __construct(protected Request $request)
     {
         parent::__construct($request);
     }
