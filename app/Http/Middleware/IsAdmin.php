@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Closure;
 use App\Services\Traits\Responsable;
-use App\Enums\ResponseCodes;
+use App\Services\ResponseCodes;
 
 class IsAdmin
 {
