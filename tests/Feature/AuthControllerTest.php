@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Services\ResponseCodes;
@@ -135,5 +137,70 @@ class AuthControllerTest extends TestCase
 
         $response = $this->withToken($token)->postJson(route('api.v1.user.logout'));
         $response->assertStatus(ResponseCodes::HTTP_UNAUTHORIZED);
+    }
+
+    public function test_forgot_password_email_sent_successfully()
+    {
+        $user = User::factory()->create();
+        $response = $this->postJson(route('api.v1.user.forgot-password'), [
+            'email' => $user->email,
+        ]);
+
+        $response->assertOk();
+        $response->assertJsonStructure([
+            'data' => [
+                'reset_token',
+            ],
+        ]);
+    }
+
+    public function test_forgot_password_email_not_sent_with_invalid_email(): void
+    {
+        $response = $this->postJson(route('api.v1.user.forgot-password'), [
+            'email' => 'test@email.com',
+        ]);
+
+        $response->assertStatus(ResponseCodes::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors(['email']);
+    }
+
+    public function test_reset_password_successfully(): void
+    {
+        $user = User::factory()->create();
+        $token = Password::createToken($user);
+        $newPassword = 'new-password';
+
+        $response = $this->postJson(route('api.v1.user.reset-password'), [
+            'token' => $token,
+            'email' => $user->email,
+            'password' => $newPassword,
+            'password_confirmation' => $newPassword,
+        ]);
+
+        $this->assertTrue(Hash::check($newPassword, $user->fresh()->password));
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'data' => [
+                'message' => 'Password has been successfully updated.',
+            ],
+        ]);
+    }
+
+    public function test_reset_password_fails_with_invalid_token(): void
+    {
+        $user = User::factory()->create();
+        $newPassword = 'new-password';
+        $response = $this->postJson(route('api.v1.user.reset-password'), [
+            'token' => 'invalid-token',
+            'email' => $user->email, // Provide a valid user email
+            'password' => $newPassword,
+            'password_confirmation' => $newPassword,
+        ]);
+
+        $response->assertStatus(ResponseCodes::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJson([
+            'error' => 'Invalid or expired token.',
+        ]);
     }
 }

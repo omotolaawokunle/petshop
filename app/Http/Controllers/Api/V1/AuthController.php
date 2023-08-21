@@ -2,10 +2,18 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Services\ResponseCodes;
+use App\Notifications\PasswordResetNotification;
+use App\Models\User;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
@@ -54,5 +62,34 @@ class AuthController extends Controller
     {
         Auth::logout();
         return $this->success(data: []);
+    }
+
+    public function sendResetPasswordLinkEmail(ForgotPasswordRequest $request): JsonResponse
+    {
+        $user = User::where('email', $request->email)->first();
+        $resetToken = Password::createToken($user);
+        $user->notify(new PasswordResetNotification($resetToken));
+        return $this->success(['reset_token' => $resetToken]);
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $response = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password),
+                ])->save();
+                Password::deleteToken($user);
+            }
+        );
+
+        if ($response === Password::PASSWORD_RESET) {
+            return $this->success(data: ["message" => "Password has been successfully updated."]);
+        }
+        if ($response === Password::INVALID_TOKEN) {
+            return $this->error(message: "Invalid or expired token.", statusCode: ResponseCodes::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        return $this->error(message: 'Unable to reset password');
     }
 }
