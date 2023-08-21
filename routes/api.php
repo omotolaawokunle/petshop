@@ -31,6 +31,8 @@ Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
     Route::prefix('/user')->name('user.')->group(function () {
         Route::post('/login', [AuthController::class, 'userLogin'])->name('login');
         Route::middleware(['auth:api'])->group(function () {
+
+            Route::post('/logout', [AuthController::class, 'userLogout'])->name('logout');
         });
     });
 });

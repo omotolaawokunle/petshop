@@ -49,4 +49,10 @@ class AuthController extends Controller
             statusCode: ResponseCodes::HTTP_UNPROCESSABLE_ENTITY
         );
     }
+
+    public function userLogout()
+    {
+        Auth::logout();
+        return $this->success(data: []);
+    }
 }

@@ -123,4 +123,17 @@ class AuthControllerTest extends TestCase
             'data' => []
         ]);
     }
+
+    public function test_user_can_logout(): void
+    {
+        $admin = User::factory()->create();
+
+        $token = $admin->createToken('test-auth');
+
+        $response = $this->withToken($token)->postJson(route('api.v1.user.logout'));
+        $response->assertStatus(ResponseCodes::HTTP_OK);
+
+        $response = $this->withToken($token)->postJson(route('api.v1.user.logout'));
+        $response->assertStatus(ResponseCodes::HTTP_UNAUTHORIZED);
+    }
 }
