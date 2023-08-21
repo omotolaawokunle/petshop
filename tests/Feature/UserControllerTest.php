@@ -6,9 +6,11 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Services\ResponseCodes;
+use App\Models\User;
 
 class UserControllerTest extends TestCase
 {
+    protected string $token;
     public function test_can_create_user_account_with_valid_data(): void
     {
         $userData = [
@@ -47,5 +49,29 @@ class UserControllerTest extends TestCase
         $response->assertJsonValidationErrors([
             'email', 'password'
         ]);
+    }
+
+    public function test_get_authenticated_user(): void
+    {
+        $this->loginAsUser();
+        $response = $this->withToken($this->token)->getJson(route('api.v1.user.show'));
+        $response->assertOk();
+        $response->assertJsonStructure([
+            'data' => [
+                'uuid', 'first_name', 'last_name', 'email', 'email_verified_at', 'avatar', 'address', 'phone_number', 'is_marketing', 'created_at', 'updated_at', 'last_login_at'
+            ]
+        ]);
+    }
+
+    public function test_cannot_get_authenticated_user_without_valid_session(): void
+    {
+        $response = $this->withToken('invalid-token')->getJson(route('api.v1.user.show'));
+        $response->assertStatus(ResponseCodes::HTTP_UNAUTHORIZED);
+    }
+
+    private function loginAsUser(): void
+    {
+        $user = User::factory()->create();
+        $this->token = $user->createToken('test-user-auth');
     }
 }
