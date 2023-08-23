@@ -20,7 +20,7 @@ class OrderStatusController extends Controller
             ->paginate($request->get('limit', 10))
             ->withQueryString();
 
-        return $this->success($statuses);
+        return $this->success(data: $statuses, onlyData: true);
     }
 
     /**

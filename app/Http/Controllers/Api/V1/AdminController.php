@@ -23,7 +23,7 @@ class AdminController extends Controller
             ->paginate($request->get('limit', 10))
             ->withQueryString();
 
-        return response()->json($users);
+        return $this->success(data: $users, onlyData: true);
     }
 
     /**

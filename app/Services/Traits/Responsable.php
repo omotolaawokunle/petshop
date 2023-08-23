@@ -7,8 +7,12 @@ use App\Services\ResponseCodes;
 
 trait Responsable
 {
-    public function success($data, $statusCode = 200, $headers = [])
+    public function success($data, $statusCode = 200, $headers = [], $onlyData = false)
     {
+        //Send only data
+        if ($onlyData) {
+            return response()->json($data, $statusCode, $headers);
+        }
         return response()->json([
             'data' => $data,
             'success' => 1,
