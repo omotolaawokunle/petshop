@@ -37,6 +37,7 @@ Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
         Route::middleware(['auth:api'])->group(function () {
             Route::get('/', [UserController::class, 'show'])->name('show');
             Route::put('/edit', [UserController::class, 'update'])->name('edit');
+            Route::delete('/', [UserController::class, 'destroy'])->name('delete');
             Route::post('/logout', [AuthController::class, 'userLogout'])->name('logout');
         });
     });

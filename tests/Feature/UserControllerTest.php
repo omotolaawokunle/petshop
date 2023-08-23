@@ -88,6 +88,21 @@ class UserControllerTest extends TestCase
         ]);
     }
 
+    public function test_delete_user_account(): void
+    {
+        $this->loginAsUser();
+        $response = $this->withToken($this->token)->deleteJson(route('api.v1.user.delete'));
+        $response->assertOk();
+        $response = $this->withToken($this->token)->getJson(route('api.v1.user.show'));
+        $response->assertStatus(ResponseCodes::HTTP_UNAUTHORIZED);
+    }
+
+    public function test_delete_user_account_with_unauthenticated_session(): void
+    {
+        $response = $this->withToken('invalid_token')->deleteJson(route('api.v1.user.delete'));
+        $response->assertStatus(ResponseCodes::HTTP_UNAUTHORIZED);
+    }
+
     private function loginAsUser(): void
     {
         $user = User::factory()->create();

@@ -14,14 +14,6 @@ use App\Http\Controllers\Controller;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index(User $user): JsonResponse
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(UserRequest $request, User $user): JsonResponse
@@ -52,8 +44,11 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user): JsonResponse
+    public function destroy(): JsonResponse
     {
-        //
+        $user = Auth::user();
+        Auth::logout();
+        $user->delete();
+        return $this->success([]);
     }
 }
