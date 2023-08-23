@@ -7,13 +7,14 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Services\ResponseCodes;
 use App\Models\User;
 
 class AuthControllerTest extends TestCase
 {
-    use RefreshDatabase;
-    public function test_admin_can_login()
+    use DatabaseTransactions;
+    public function test_admin_can_login(): void
     {
         $admin = User::factory()->create([
             'is_admin' => true,
@@ -32,7 +33,7 @@ class AuthControllerTest extends TestCase
         ]);
     }
 
-    public function test_non_admin_cannot_login()
+    public function test_non_admin_cannot_login(): void
     {
         $user = User::factory()->create([
             'is_admin' => false,
@@ -52,7 +53,7 @@ class AuthControllerTest extends TestCase
         ]);
     }
 
-    public function test_admin_cannot_login_with_wrong_credentials()
+    public function test_admin_cannot_login_with_wrong_credentials(): void
     {
         User::factory()->create([
             'is_admin' => true,
@@ -72,7 +73,7 @@ class AuthControllerTest extends TestCase
         ]);
     }
 
-    public function test_admin_can_logout()
+    public function test_admin_can_logout(): void
     {
         $admin = User::factory()->create([
             'is_admin' => true,
@@ -91,7 +92,7 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(ResponseCodes::HTTP_UNAUTHORIZED);
     }
 
-    public function test_user_can_login()
+    public function test_user_can_login(): void
     {
         $user = User::factory()->create();
 
@@ -108,7 +109,7 @@ class AuthControllerTest extends TestCase
         ]);
     }
 
-    public function test_user_cannot_login_with_wrong_credentials()
+    public function test_user_cannot_login_with_wrong_credentials(): void
     {
         User::factory()->create();
 
@@ -139,7 +140,7 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(ResponseCodes::HTTP_UNAUTHORIZED);
     }
 
-    public function test_forgot_password_email_sent_successfully()
+    public function test_forgot_password_email_sent_successfully(): void
     {
         $user = User::factory()->create();
         $response = $this->postJson(route('api.v1.user.forgot-password'), [

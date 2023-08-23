@@ -9,7 +9,7 @@ use App\Models\User;
 
 class UserFilterTest extends TestCase
 {
-    public function test_first_name_filter()
+    public function test_first_name_filter(): void
     {
         $request = new Request(['first_name' => 'John']);
         $filter = new UserFilter($request);

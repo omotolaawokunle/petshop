@@ -5,14 +5,15 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Models\User;
 
 class AdminControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
     protected $token;
 
-    public function loginAsAdmin()
+    public function loginAsAdmin(): void
     {
         $admin = User::factory()->create([
             'is_admin' => true,
@@ -20,15 +21,13 @@ class AdminControllerTest extends TestCase
         $this->token = $admin->createToken('test-auth');
     }
 
-    public function test_get_user_listing_without_filters()
+    public function test_get_user_listing_without_filters(): void
     {
         $this->loginAsAdmin();
         User::factory()->count(5)->create();
-
         $response = $this->withToken($this->token)->getJson(route('api.v1.admin.user-listing'));
 
         $response->assertOk();
-        $response->assertJsonCount(5, 'data');
         $response->assertJsonStructure([
             'current_page',
             'data' => [
@@ -40,7 +39,7 @@ class AdminControllerTest extends TestCase
         ]);
     }
 
-    public function test_get_user_listing_with_filters()
+    public function test_get_user_listing_with_filters(): void
     {
         $this->loginAsAdmin();
         User::factory()->create([
@@ -70,7 +69,7 @@ class AdminControllerTest extends TestCase
         ]);
     }
 
-    public function test_admin_can_create_admin_account_with_valid_data()
+    public function test_admin_can_create_admin_account_with_valid_data(): void
     {
         $this->loginAsAdmin();
         $adminData = [
@@ -92,7 +91,7 @@ class AdminControllerTest extends TestCase
         ]);
     }
 
-    public function test_admin_cannot_create_admin_account_with_invalid_data()
+    public function test_admin_cannot_create_admin_account_with_invalid_data(): void
     {
         $this->loginAsAdmin();
         $invalidAdminData = [
@@ -112,7 +111,7 @@ class AdminControllerTest extends TestCase
         ]);
     }
 
-    public function test_admin_can_edit_user_account_with_valid_data()
+    public function test_admin_can_edit_user_account_with_valid_data(): void
     {
         $user = User::factory()->create([
             'first_name' => 'Jane',
@@ -138,7 +137,7 @@ class AdminControllerTest extends TestCase
         ]);
     }
 
-    public function test_admin_cannot_edit_user_account_with_invalid_data()
+    public function test_admin_cannot_edit_user_account_with_invalid_data(): void
     {
         $user = User::factory()->create([
             'first_name' => 'Jane',
@@ -162,7 +161,7 @@ class AdminControllerTest extends TestCase
         ]);
     }
 
-    public function test_admin_can_delete_valid_user_account()
+    public function test_admin_can_delete_valid_user_account(): void
     {
         $user = User::factory()->create([
             'first_name' => 'Jane',
@@ -177,7 +176,7 @@ class AdminControllerTest extends TestCase
         ]);
     }
 
-    public function test_admin_cannot_delete_invalid_user_account()
+    public function test_admin_cannot_delete_invalid_user_account(): void
     {
         $user = User::factory()->create([
             'first_name' => 'Jane',

@@ -5,12 +5,13 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Services\ResponseCodes;
 use App\Models\User;
 
 class UserControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
     protected string $token;
     public function test_can_create_user_account_with_valid_data(): void
     {
