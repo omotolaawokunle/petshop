@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\OrderStatusController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\BrandController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\AdminController;
 
@@ -60,6 +61,16 @@ Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
             Route::post('/create', [CategoryController::class, 'store'])->name('create');
             Route::put('/{category}', [CategoryController::class, 'update'])->name('edit');
             Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('delete');
+        });
+    });
+
+    Route::get('/brands', [BrandController::class, 'index'])->name('brand');
+    Route::prefix('/brand')->name('brand.')->group(function () {
+        Route::get('/{brand}', [BrandController::class, 'show'])->name('show');
+        Route::middleware(['auth:api'])->group(function () {
+            Route::post('/create', [BrandController::class, 'store'])->name('create');
+            Route::put('/{brand}', [BrandController::class, 'update'])->name('edit');
+            Route::delete('/{brand}', [BrandController::class, 'destroy'])->name('delete');
         });
     });
 });
