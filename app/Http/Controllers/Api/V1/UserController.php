@@ -41,9 +41,12 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user): JsonResponse
+    public function update(UserRequest $request): JsonResponse
     {
-        //
+        $user = Auth::user();
+        $user->update($request->toArray());
+        return $this->success(new UserResource($user));
+
     }
 
     /**
