@@ -65,7 +65,7 @@ class OrderStatusControllerTest extends TestCase
         ]);
     }
 
-    public function test_authenticated_user_can_update_order_status()
+    public function test_authenticated_user_can_update_order_status(): void
     {
         $this->loginAsUser();
 
@@ -81,7 +81,7 @@ class OrderStatusControllerTest extends TestCase
         $response->assertJson(['data' => $updatedData]);
     }
 
-    public function test_authenticated_user_can_destroy_order_status()
+    public function test_authenticated_user_can_destroy_order_status(): void
     {
         $this->loginAsUser();
         $orderStatus = $this->getOrderStatus();
@@ -94,7 +94,7 @@ class OrderStatusControllerTest extends TestCase
         $this->assertDatabaseMissing('order_statuses', ['title' => $orderStatus->title]);
     }
 
-    public function test_unauthenticated_user_cannot_access_protected_methods()
+    public function test_unauthenticated_user_cannot_access_protected_methods(): void
     {
         $orderStatus = $this->getOrderStatus();
 
