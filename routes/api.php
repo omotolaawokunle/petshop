@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\OrderStatusController;
+use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\AdminController;
 
@@ -49,6 +50,16 @@ Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
             Route::post('/create', [OrderStatusController::class, 'store'])->name('create');
             Route::put('/{orderStatus}', [OrderStatusController::class, 'update'])->name('edit');
             Route::delete('/{orderStatus}', [OrderStatusController::class, 'destroy'])->name('delete');
+        });
+    });
+
+    Route::get('/categories', [CategoryController::class, 'index'])->name('category');
+    Route::prefix('/category')->name('category.')->group(function () {
+        Route::get('/{category}', [CategoryController::class, 'show'])->name('show');
+        Route::middleware(['auth:api'])->group(function () {
+            Route::post('/create', [CategoryController::class, 'store'])->name('create');
+            Route::put('/{category}', [CategoryController::class, 'update'])->name('edit');
+            Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('delete');
         });
     });
 });
