@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Category;
 
@@ -18,9 +19,10 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
+        $title = $this->faker->word;
         return [
-            'title' => $this->faker->word,
-            'slug' => $this->faker->slug,
+            'title' => $title,
+            'slug' => Str::slug($title),
         ];
     }
 }
