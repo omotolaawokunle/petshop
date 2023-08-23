@@ -36,4 +36,14 @@ class BaseFilter
     {
         return $this->request->all();
     }
+
+    public function sortBy($field)
+    {
+        try {
+            $type = ((bool) $this->request->get('desc', 0)) ? 'desc' : 'asc';
+            return $this->builder->orderBy($field, $type);
+        } catch (\Throwable $e) {
+            return $this->builder;
+        }
+    }
 }

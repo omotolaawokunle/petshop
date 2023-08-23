@@ -44,13 +44,4 @@ class UserFilter extends BaseFilter
         $term = (bool) $term;
         return $this->builder->where('is_marketing', $term);
     }
-
-    public function sortBy($field)
-    {
-        if (!method_exists($this, $field)) {
-            return $this->builder;
-        }
-        $type = ((bool) $this->request->get('desc', 0)) ? 'desc' : 'asc';
-        return $this->builder->orderBy($field, $type);
-    }
 }
