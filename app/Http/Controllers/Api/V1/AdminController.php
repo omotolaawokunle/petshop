@@ -18,7 +18,10 @@ class AdminController extends Controller
      */
     public function getUserListing(Request $request, UserFilter $userFilter)
     {
-        $users = User::filter($userFilter)->where('is_admin', 0)->paginate($request->get('limit', 10));
+        $users = User::filter($userFilter)
+            ->where('is_admin', 0)
+            ->paginate($request->get('limit', 10))
+            ->withQueryString();
 
         return response()->json($users);
     }
