@@ -43,4 +43,12 @@ Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
         });
     });
     Route::get('/order-statuses', [OrderStatusController::class, 'index'])->name('order-status');
+    Route::prefix('/order-status')->name('order-status.')->group(function () {
+        Route::get('/{orderStatus}', [OrderStatusController::class, 'show'])->name('show');
+        Route::middleware(['auth:api'])->group(function () {
+            Route::post('/create', [OrderStatusController::class, 'store'])->name('create');
+            Route::put('/{orderStatus}', [OrderStatusController::class, 'update'])->name('edit');
+            Route::delete('/{orderStatus}', [OrderStatusController::class, 'destroy'])->name('delete');
+        });
+    });
 });
