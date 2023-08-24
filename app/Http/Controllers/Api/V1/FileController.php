@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Request;
 use App\Models\File;
 use App\Http\Requests\FileRequest;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -25,7 +25,7 @@ class FileController extends Controller
      */
     public function show(File $file)
     {
-        $filePath = Storage::disk('public')->path("pet-shop/$file->name");
+        $filePath = Storage::disk('public')->path("pet-shop/{$file->name}");
         return $this->download($filePath, $file->name);
     }
 }

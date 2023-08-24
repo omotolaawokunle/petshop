@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FileController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\FileController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\AdminController;
 use App\Http\Controllers\Api\V1\BrandController;
@@ -83,7 +83,7 @@ Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
         Route::middleware(['auth:api', 'is_admin'])->group(function () {
             Route::get('/{payment}', [PaymentController::class, 'show'])->name('show');
             Route::post('/create', [PaymentController::class, 'store'])
-            ->name('create')->withoutMiddleware(['is_admin']);
+                ->name('create')->withoutMiddleware(['is_admin']);
             Route::put('/{payment}', [PaymentController::class, 'update'])->name('edit');
             Route::delete('/{payment}', [PaymentController::class, 'destroy'])->name('delete');
         });
