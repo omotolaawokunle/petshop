@@ -17,13 +17,13 @@ class FileFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->word . '.' . $this->faker->fileExtension;
+        $name = $this->faker->word . '.' . $this->faker->fileExtension();
 
         return [
             'name' => $name,
             'path' => 'storage/pet-shop/' . $name,
             'size' => $this->faker->randomNumber(5),
-            'type' => $this->faker->mimeType,
+            'type' => $this->faker->mimeType(),
             'created_at' => now(),
             'updated_at' => now(),
         ];
