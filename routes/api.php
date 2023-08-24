@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\FileController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\AdminController;
 use App\Http\Controllers\Api\V1\BrandController;
+use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\CategoryController;
@@ -102,5 +103,19 @@ Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
     Route::prefix('/file')->name('file.')->group(function () {
         Route::post('/upload', [FileController::class, 'store'])->name('upload');
         Route::get('/{file}', [FileController::class, 'show'])->name('download');
+    });
+
+    Route::middleware(['auth:api', 'is_admin'])->group(function () {
+        Route::get('/orders', [OrderController::class, 'index'])->name('order');
+        Route::prefix('/order')->name('order.')->group(function () {
+            Route::get('/shipment-locator', [OrderController::class, 'shippedOrders'])->name('shipped');
+            Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+            Route::get('/{order}/download', [OrderController::class, 'downloadInvoice'])->name('download');
+            Route::post('/create', [OrderController::class, 'store'])
+            ->name('create')
+            ->withoutMiddleware('is_admin');
+            Route::put('/{order}', [OrderController::class, 'update'])->name('edit');
+            Route::delete('/{order}', [OrderController::class, 'destroy'])->name('delete');
+        });
     });
 });
