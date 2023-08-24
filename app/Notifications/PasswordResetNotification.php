@@ -2,10 +2,10 @@
 
 namespace App\Notifications;
 
-use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class PasswordResetNotification extends Notification
 {
@@ -33,7 +33,7 @@ class PasswordResetNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->line('Hello!')
             ->line('A password reset for the account associated with this email has been requested.')
             ->line('Please enter the code below in your password reset page.')
