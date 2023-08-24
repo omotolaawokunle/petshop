@@ -25,7 +25,7 @@ class UserRequest extends FormRequest
         return [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email' => ['required', 'email', $this->method() == 'PUT' ? Rule::unique('users', 'email')->ignore($this->user()) : 'unique:users'],
+            'email' => ['required', 'email', strtolower($this->method()) === 'put' ? Rule::unique('users', 'email')->ignore($this->user()) : 'unique:users'],
             'password' => 'required|string|confirmed',
             'avatar' => 'nullable|uuid|exists:avatars,uuid',
             'address' => 'required',
@@ -44,7 +44,7 @@ class UserRequest extends FormRequest
             'avatar' => $this->get('avatar'),
             'address' => $this->get('address'),
             'phone_number' => $this->get('phone_number'),
-            'is_marketing' => ((bool) $this->get('is_marketing', 0)),
+            'is_marketing' => (bool) $this->get('is_marketing', 0),
         ];
     }
 }

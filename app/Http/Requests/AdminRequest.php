@@ -43,7 +43,7 @@ class AdminRequest extends FormRequest
             'avatar' => $this->get('avatar'),
             'address' => $this->get('address'),
             'phone_number' => $this->get('phone_number'),
-            'is_marketing' => ((bool) $this->get('marketing', 0)),
+            'is_marketing' => (bool) $this->get('marketing', 0),
         ];
     }
 }
