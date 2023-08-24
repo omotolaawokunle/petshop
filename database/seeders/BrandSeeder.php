@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Brand;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Brand;
 
 class BrandSeeder extends Seeder
 {

@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\OrderStatus;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\OrderStatus;
 
 class OrderStatusSeeder extends Seeder
 {
