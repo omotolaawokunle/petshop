@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\OrderStatusController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\BrandController;
@@ -71,6 +72,16 @@ Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
             Route::post('/create', [BrandController::class, 'store'])->name('create');
             Route::put('/{brand}', [BrandController::class, 'update'])->name('edit');
             Route::delete('/{brand}', [BrandController::class, 'destroy'])->name('delete');
+        });
+    });
+
+    Route::get('/payments', [PaymentController::class, 'index'])->name('payment')->middleware('auth:api');
+    Route::prefix('/payment')->name('payment.')->group(function () {
+        Route::middleware(['auth:api'])->group(function () {
+            Route::get('/{payment}', [PaymentController::class, 'show'])->name('show');
+            Route::post('/create', [PaymentController::class, 'store'])->name('create');
+            Route::put('/{payment}', [PaymentController::class, 'update'])->name('edit');
+            Route::delete('/{payment}', [PaymentController::class, 'destroy'])->name('delete');
         });
     });
 });
