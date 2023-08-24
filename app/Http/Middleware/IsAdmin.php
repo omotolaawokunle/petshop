@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Http\Request;
 use Closure;
-use App\Services\Traits\Responsable;
+use Illuminate\Http\Request;
 use App\Services\ResponseCodes;
+use App\Services\Traits\Responsable;
+use Symfony\Component\HttpFoundation\Response;
 
 class IsAdmin
 {
@@ -18,7 +18,9 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user() && $request->user()->is_admin) return $next($request);
+        if ($request->user() && $request->user()->is_admin) {
+            return $next($request);
+        }
         return $this->error(message: 'You are not authorized to access this page!', statusCode: ResponseCodes::HTTP_UNAUTHORIZED);
     }
 }
