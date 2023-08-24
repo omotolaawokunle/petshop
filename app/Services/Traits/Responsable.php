@@ -2,12 +2,14 @@
 
 namespace App\Services\Traits;
 
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Illuminate\Http\JsonResponse;
 use App\Services\ResponseCodes;
-
 
 trait Responsable
 {
-    public function success($data, $statusCode = 200, $headers = [], $onlyData = false)
+    public function success($data, $statusCode = 200, $headers = [], $onlyData = false): JsonResponse
     {
         //Send only data
         if ($onlyData) {
@@ -21,7 +23,7 @@ trait Responsable
         ], $statusCode, $headers);
     }
 
-    public function error($message, array $errors = [], array $data = [], $statusCode = 400, $headers = [])
+    public function error($message, array $errors = [], array $data = [], $statusCode = 400, $headers = []): JsonResponse
     {
         return response()->json([
             'success' => 0,
@@ -31,7 +33,7 @@ trait Responsable
         ], $statusCode, $headers);
     }
 
-    public function notFound(string $message = "")
+    public function notFound(string $message = ""): JsonResponse
     {
         $message = $message ?? "Resource not found!";
         return $this->error(
@@ -40,12 +42,19 @@ trait Responsable
         );
     }
 
-    public function validationError($errors = [])
+    public function validationError($errors = []): JsonResponse
     {
         return $this->error(
             message: "Failed Validation",
             errors: $errors,
             statusCode: ResponseCodes::HTTP_UNPROCESSABLE_ENTITY
         );
+    }
+
+    public function download($filePath, string $fileName): BinaryFileResponse
+    {
+        return response()->download($filePath, $fileName, [
+            'Content-Type' => 'application/octet-stream',
+        ]);
     }
 }

@@ -21,7 +21,7 @@ class FileFactory extends Factory
 
         return [
             'name' => $name,
-            'path' => 'storage/files/' . $name,
+            'path' => 'storage/pet-shop/' . $name,
             'size' => $this->faker->randomNumber(5),
             'type' => $this->faker->mimeType,
             'created_at' => now(),

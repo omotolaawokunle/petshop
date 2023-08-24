@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\PaymentController;
@@ -96,5 +97,10 @@ Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
             Route::put('/{product}', [ProductController::class, 'update'])->name('edit');
             Route::delete('/{product}', [ProductController::class, 'destroy'])->name('delete');
         });
+    });
+
+    Route::prefix('/file')->name('file.')->group(function () {
+        Route::post('/upload', [FileController::class, 'store'])->name('upload');
+        Route::get('/{file}', [FileController::class, 'show'])->name('download');
     });
 });
