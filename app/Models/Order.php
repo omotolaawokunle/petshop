@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Services\Traits\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Services\Traits\HasUuids;
 
 class Order extends Model
 {
