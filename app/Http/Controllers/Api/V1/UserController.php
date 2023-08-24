@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use App\Models\User;
-use App\Http\Resources\UserWithTokenResource;
-use App\Http\Resources\UserResource;
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\UserWithTokenResource;
 
 class UserController extends Controller
 {
@@ -38,7 +37,6 @@ class UserController extends Controller
         $user = Auth::user();
         $user->update($request->toArray());
         return $this->success(new UserResource($user));
-
     }
 
     /**

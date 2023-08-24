@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\OrderStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Services\Filters\BaseFilter;
-use App\Models\OrderStatus;
-use App\Http\Requests\OrderStatusRequest;
 use App\Http\Controllers\Controller;
+use App\Services\Filters\BaseFilter;
+use App\Http\Requests\OrderStatusRequest;
 
 class OrderStatusController extends Controller
 {

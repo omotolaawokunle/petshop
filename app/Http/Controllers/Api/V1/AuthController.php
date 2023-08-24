@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use App\Services\ResponseCodes;
-use App\Notifications\PasswordResetNotification;
 use App\Models\User;
-use App\Http\Requests\ResetPasswordRequest;
+use App\Services\ResponseCodes;
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\LoginRequest;
-use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Requests\ForgotPasswordRequest;
+use App\Notifications\PasswordResetNotification;
 
 class AuthController extends Controller
 {

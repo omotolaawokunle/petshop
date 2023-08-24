@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Services\Filters\BaseFilter;
-use App\Models\Brand;
 use App\Http\Requests\BrandRequest;
 use App\Http\Controllers\Controller;
+use App\Services\Filters\BaseFilter;
 
 class BrandController extends Controller
 {

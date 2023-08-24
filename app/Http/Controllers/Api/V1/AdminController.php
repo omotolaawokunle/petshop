@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use Illuminate\Http\Request;
-use App\Services\Filters\UserFilter;
 use App\Models\User;
-use App\Http\Resources\UserResource;
-use App\Http\Resources\AdminResource;
+use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\AdminRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use App\Services\Filters\UserFilter;
+use App\Http\Resources\AdminResource;
 
 class AdminController extends Controller
 {

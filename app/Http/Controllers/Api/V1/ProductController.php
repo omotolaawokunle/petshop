@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Services\Filters\ProductFilter;
-use App\Models\Product;
-use App\Http\Resources\ProductResource;
-use App\Http\Requests\ProductRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductRequest;
+use App\Http\Resources\ProductResource;
+use App\Services\Filters\ProductFilter;
 
 class ProductController extends Controller
 {
