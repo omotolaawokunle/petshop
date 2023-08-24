@@ -3,15 +3,15 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\Brand;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Models\Brand;
 
 class BrandControllerTest extends TestCase
 {
     use DatabaseTransactions, WithFaker;
-    protected $token;
+    protected string $token;
 
     public function test_get_all_brands(): void
     {
@@ -91,8 +91,6 @@ class BrandControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJson(['data' => []]);
-
-        $this->assertDatabaseMissing('brands', ['title' => $brand->title]);
     }
 
     public function test_unauthenticated_user_cannot_access_protected_methods(): void

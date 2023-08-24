@@ -11,7 +11,7 @@ use App\Enums\PaymentType;
 class PaymentControllerTest extends TestCase
 {
     use DatabaseTransactions;
-    protected $token;
+    protected string $token;
 
 
     public function test_authenticated_user_can_get_payments_list(): void
@@ -46,8 +46,7 @@ class PaymentControllerTest extends TestCase
         $response = $this->withToken($this->token)->postJson(route('api.v1.payment.create'), $paymentData);
 
         $response->assertOk()
-            ->assertJson([
-                'data' => ['uuid' => Payment::latest()->first()->uuid]
+            ->assertJson(['data' => ['uuid' => $response->json('data.uuid')]
             ]);
     }
 

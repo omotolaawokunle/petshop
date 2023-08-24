@@ -10,7 +10,7 @@ use App\Models\OrderStatus;
 class OrderStatusControllerTest extends TestCase
 {
     use DatabaseTransactions, WithFaker;
-    protected $token;
+    protected string $token;
 
     public function test_get_all_statuses(): void
     {

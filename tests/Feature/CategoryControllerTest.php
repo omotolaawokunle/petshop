@@ -3,15 +3,15 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\Category;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Models\Category;
 
 class CategoryControllerTest extends TestCase
 {
     use DatabaseTransactions, WithFaker;
-    protected $token;
+    protected string $token;
 
     public function test_get_all_categories(): void
     {

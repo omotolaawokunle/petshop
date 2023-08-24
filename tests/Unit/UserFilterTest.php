@@ -3,9 +3,9 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\Filters\UserFilter;
-use App\Models\User;
 
 class UserFilterTest extends TestCase
 {

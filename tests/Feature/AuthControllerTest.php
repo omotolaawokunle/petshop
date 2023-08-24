@@ -3,13 +3,13 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\Support\Facades\Password;
+use App\Models\User;
+use App\Services\ResponseCodes;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Services\ResponseCodes;
-use App\Models\User;
 
 class AuthControllerTest extends TestCase
 {
@@ -177,8 +177,9 @@ class AuthControllerTest extends TestCase
             'password' => $newPassword,
             'password_confirmation' => $newPassword,
         ]);
-
-        $this->assertTrue(Hash::check($newPassword, $user->fresh()->password));
+        /** @var User $user */
+        $user = $user->fresh();
+        $this->assertTrue(Hash::check($newPassword, $user->password));
 
         $response->assertStatus(200);
         $response->assertJson([

@@ -11,7 +11,7 @@ use App\Models\Product;
 class ProductControllerTest extends TestCase
 {
     use DatabaseTransactions, WithFaker;
-    protected $token;
+    protected string $token;
 
     public function test_can_get_products_list(): void
     {

@@ -3,11 +3,11 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\User;
+use App\Services\ResponseCodes;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Services\ResponseCodes;
-use App\Models\User;
 
 class UserControllerTest extends TestCase
 {
@@ -121,6 +121,11 @@ class UserControllerTest extends TestCase
         return;
     }
 
+    /**
+     * Get valid user data
+     *
+     * @return array<string|int>
+     */
     private function getUserData(): array
     {
         return [
@@ -135,6 +140,11 @@ class UserControllerTest extends TestCase
         ];
     }
 
+    /**
+     * Get Invalid user data
+     *
+     * @return array<string|int>
+     */
     private function getInvalidUserData(): array
     {
         return [
