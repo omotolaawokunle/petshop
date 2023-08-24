@@ -14,10 +14,11 @@ class BaseFilter
     {
     }
 
-    public function apply(Builder $builder)
+    public function apply(Builder $builder): Builder
     {
         $this->builder = $builder;
         foreach ($this->filters() as $name => $value) {
+            $name = Str::camel($name);
             if (!method_exists($this, $name)) {
                 continue;
             }
@@ -32,18 +33,18 @@ class BaseFilter
         return $this->builder;
     }
 
-    public function filters()
+    public function filters(): array
     {
         return $this->request->all();
     }
 
-    public function sortBy($field)
+    public function sortBy(string $field): Builder
     {
         try {
-            $type = ((bool) $this->request->get('desc', 0)) ? 'desc' : 'asc';
+            $type = (bool) $this->request->get('desc', 0) ? 'desc' : 'asc';
             return $this->builder->orderBy($field, $type);
         } catch (\Throwable $e) {
-            return $this->builder;
+            return $this->builder->latest('created_at');
         }
     }
 }

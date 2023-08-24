@@ -2,15 +2,15 @@
 
 namespace App\Services\Auth\Guards;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
-use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Auth\GuardHelpers;
-use Firebase\JWT\Key;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use App\Models\JwtToken;
+use Illuminate\Http\Request;
+use Illuminate\Auth\GuardHelpers;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class JwtGuard implements Guard
 {
@@ -58,15 +58,20 @@ class JwtGuard implements Guard
     /**
      * Check if token is valid and return user
      *
-     * @return void
+     * @return Authenticatable|null
      */
-    protected function validateToken()
+    protected function validateToken(): ?Authenticatable
     {
+        if (is_null($this->getTokenForRequest())) {
+            return null;
+        }
+        /** @var string $bearerToken */
         $bearerToken = $this->getTokenForRequest();
-        if (is_null($bearerToken)) return null;
-        $token = (array) JWT::decode($this->getTokenForRequest(), new Key(config('jwt.key.public'), 'RS256'));
-        if ($user = $this->provider->retrieveById($token['user_uuid'])) {
-            if ($savedToken = JwtToken::where('user_id', $user->id)->where('unique_id', $token['unique_id'])->first()) {
+        $token = (array) JWT::decode($bearerToken, new Key(config('jwt.key.public'), 'RS256'));
+        $user = $this->provider->retrieveById($token['user_uuid']);
+        if ($user) {
+            $savedToken = JwtToken::where('user_id', $user->id)->where('unique_id', $token['unique_id'])->first();
+            if ($savedToken) {
                 $savedToken->update(['last_used_at' => now()]);
                 return $user;
             }
@@ -90,7 +95,7 @@ class JwtGuard implements Guard
      * @param  array  $credentials
      * @return bool
      */
-    public function validate(array $credentials = [])
+    public function validate(array $credentials = []): bool
     {
         if (empty($credentials['id'])) {
             return false;
@@ -103,7 +108,7 @@ class JwtGuard implements Guard
         return false;
     }
 
-    public function logout()
+    public function logout(): void
     {
         $token = (array) JWT::decode($this->getTokenForRequest(), new Key(config('jwt.key.public'), 'RS256'));
 

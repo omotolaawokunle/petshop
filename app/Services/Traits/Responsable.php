@@ -2,14 +2,27 @@
 
 namespace App\Services\Traits;
 
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Illuminate\Http\JsonResponse;
 use App\Services\ResponseCodes;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 trait Responsable
 {
-    public function success($data, $statusCode = 200, $headers = [], $onlyData = false): JsonResponse
+    /**
+     * Return success response
+     *
+     * @param  mixed        $data
+     * @param  int      $statusCode
+     * @param  array<string|array|int|bool|float>        $headers
+     *
+     * @return JsonResponse
+     */
+    public function success(
+        mixed $data,
+        int $statusCode = 200,
+        array $headers = [],
+        bool $onlyData = false
+    ): JsonResponse
     {
         //Send only data
         if ($onlyData) {
@@ -23,26 +36,40 @@ trait Responsable
         ], $statusCode, $headers);
     }
 
-    public function error($message, array $errors = [], array $data = [], $statusCode = 400, $headers = []): JsonResponse
+    /**
+     * Return error response
+     *
+     * @param  array<string|array|int|bool|float>        $errors
+     * @param  array<string|array|int|bool|float>        $data
+     * @param  array<string|array|int|bool|float>        $headers
+     * @return JsonResponse
+     */
+    public function error(
+        string $message,
+        array $errors = [],
+        array $data = [],
+        int $statusCode = 400,
+        array $headers = []
+    ): JsonResponse
     {
         return response()->json([
             'success' => 0,
             'error' => $message,
             'errors' => $errors,
-            'data' => $data
+            'data' => $data,
         ], $statusCode, $headers);
     }
 
     public function notFound(string $message = ""): JsonResponse
     {
-        $message = $message ?? "Resource not found!";
+        $message = $message !== "" ? $message : "Resource not found!";
         return $this->error(
             message: $message,
             statusCode: ResponseCodes::HTTP_NOT_FOUND
         );
     }
 
-    public function validationError($errors = []): JsonResponse
+    public function validationError(mixed $errors = []): JsonResponse
     {
         return $this->error(
             message: "Failed Validation",
@@ -51,7 +78,7 @@ trait Responsable
         );
     }
 
-    public function download($filePath, string $fileName): BinaryFileResponse
+    public function download(string $filePath, string $fileName): BinaryFileResponse
     {
         return response()->download($filePath, $fileName, [
             'Content-Type' => 'application/octet-stream',

@@ -2,44 +2,36 @@
 
 namespace App\Services\Filters;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-
+use Illuminate\Database\Eloquent\Builder;
 
 class UserFilter extends BaseFilter
 {
-
-    public function __construct(protected Request $request)
+    public function firstName(string $term): Builder
     {
-        parent::__construct($request);
+        return $this->builder->where('first_name', 'LIKE', "%{$term}%");
     }
 
-    public function first_name($term)
+    public function email(string $term): Builder
     {
-        return $this->builder->where('first_name', 'LIKE', "%$term%");
+        return $this->builder->where('email', 'LIKE', "%{$term}%");
     }
 
-    public function email($term)
+    public function phone(string $term): Builder
     {
-        return $this->builder->where('email', 'LIKE', "%$term%");
+        return $this->builder->where('phone', 'LIKE', "%{$term}%");
     }
 
-    public function phone($term)
+    public function address(string $term): Builder
     {
-        return $this->builder->where('phone', 'LIKE', "%$term%");
+        return $this->builder->where('address', 'LIKE', "%{$term}%");
     }
 
-    public function address($term)
-    {
-        return $this->builder->where('address', 'LIKE', "%$term%");
-    }
-
-    public function created_at($term)
+    public function createdAt(string $term): Builder
     {
         return $this->builder->whereDate('created_at', $term);
     }
 
-    public function marketing($term)
+    public function marketing(mixed $term): Builder
     {
         $term = (bool) $term;
         return $this->builder->where('is_marketing', $term);
