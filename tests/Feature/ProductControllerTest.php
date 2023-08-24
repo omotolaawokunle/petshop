@@ -37,7 +37,7 @@ class ProductControllerTest extends TestCase
         $this->assertDatabaseHas('products', ['title' => $productData['title']]);
     }
 
-    public function test_can_show_product()
+    public function test_can_show_product(): void
     {
         $product = $this->getProduct();
 
@@ -51,7 +51,7 @@ class ProductControllerTest extends TestCase
             ]);
     }
 
-    public function test_can_update_product()
+    public function test_can_update_product(): void
     {
         $this->loginAsAdmin();
 
@@ -67,7 +67,7 @@ class ProductControllerTest extends TestCase
         ]);
     }
 
-    public function test_can_delete_product()
+    public function test_can_delete_product(): void
     {
         $this->loginAsAdmin();
 
