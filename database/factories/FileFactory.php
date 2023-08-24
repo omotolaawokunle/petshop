@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class FileFactory extends Factory
 {
+    protected $model = \App\Models\File::class;
     /**
      * Define the model's default state.
      *
