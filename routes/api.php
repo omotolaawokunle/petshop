@@ -1,16 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 use App\Http\Controllers\FileController;
-use App\Http\Controllers\Api\V1\UserController;
-use App\Http\Controllers\Api\V1\ProductController;
-use App\Http\Controllers\Api\V1\PaymentController;
-use App\Http\Controllers\Api\V1\OrderStatusController;
-use App\Http\Controllers\Api\V1\CategoryController;
-use App\Http\Controllers\Api\V1\BrandController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\AdminController;
+use App\Http\Controllers\Api\V1\BrandController;
+use App\Http\Controllers\Api\V1\PaymentController;
+use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\OrderStatusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,7 +82,8 @@ Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
     Route::prefix('/payment')->name('payment.')->group(function () {
         Route::middleware(['auth:api', 'is_admin'])->group(function () {
             Route::get('/{payment}', [PaymentController::class, 'show'])->name('show');
-            Route::post('/create', [PaymentController::class, 'store'])->name('create')->withoutMiddleware(['is_admin']);
+            Route::post('/create', [PaymentController::class, 'store'])
+            ->name('create')->withoutMiddleware(['is_admin']);
             Route::put('/{payment}', [PaymentController::class, 'update'])->name('edit');
             Route::delete('/{payment}', [PaymentController::class, 'destroy'])->name('delete');
         });
