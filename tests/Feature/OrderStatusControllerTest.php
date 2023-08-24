@@ -40,7 +40,7 @@ class OrderStatusControllerTest extends TestCase
 
     public function test_authenticated_user_can_create_order_status(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
 
         $data = [
             'title' => $this->faker->word,
@@ -67,7 +67,7 @@ class OrderStatusControllerTest extends TestCase
 
     public function test_authenticated_user_can_update_order_status(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
 
         $orderStatus = $this->getOrderStatus();
 
@@ -83,7 +83,7 @@ class OrderStatusControllerTest extends TestCase
 
     public function test_authenticated_user_can_destroy_order_status(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
         $orderStatus = $this->getOrderStatus();
 
         $response = $this->withToken($this->token)->deleteJson(route('api.v1.order-status.delete', $orderStatus));
@@ -111,10 +111,12 @@ class OrderStatusControllerTest extends TestCase
         $response->assertUnauthorized();
     }
 
-    private function loginAsUser(): void
+    private function loginAsAdmin(): void
     {
-        $user = \App\Models\User::factory()->create();
-        $this->token = $user->createToken('test-user-auth');
+        $admin = \App\Models\User::factory([
+            'is_admin' => true
+        ])->create();
+        $this->token = $admin->createToken('test-admin-auth');
         return;
     }
 

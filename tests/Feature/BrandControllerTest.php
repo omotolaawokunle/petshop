@@ -41,7 +41,7 @@ class BrandControllerTest extends TestCase
 
     public function test_authenticated_user_can_create_brand(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
 
         $data = [
             'title' => $this->faker->word,
@@ -68,7 +68,7 @@ class BrandControllerTest extends TestCase
 
     public function test_authenticated_user_can_update_brand(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
 
         $brand = $this->getBrand();
 
@@ -84,7 +84,7 @@ class BrandControllerTest extends TestCase
 
     public function test_authenticated_user_can_destroy_brand(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
         $brand = $this->getBrand();
 
         $response = $this->withToken($this->token)->deleteJson(route('api.v1.brand.delete', $brand));
@@ -112,10 +112,12 @@ class BrandControllerTest extends TestCase
         $response->assertUnauthorized();
     }
 
-    private function loginAsUser(): void
+    private function loginAsAdmin(): void
     {
-        $user = \App\Models\User::factory()->create();
-        $this->token = $user->createToken('test-user-auth');
+        $admin = \App\Models\User::factory([
+            'is_admin' => true
+        ])->create();
+        $this->token = $admin->createToken('test-admin-auth');
         return;
     }
 

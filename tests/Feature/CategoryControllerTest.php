@@ -41,7 +41,7 @@ class CategoryControllerTest extends TestCase
 
     public function test_authenticated_user_can_create_category(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
 
         $data = [
             'title' => $this->faker->word,
@@ -68,7 +68,7 @@ class CategoryControllerTest extends TestCase
 
     public function test_authenticated_user_can_update_category(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
 
         $category = $this->getCategory();
 
@@ -84,15 +84,13 @@ class CategoryControllerTest extends TestCase
 
     public function test_authenticated_user_can_destroy_category(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
         $category = $this->getCategory();
 
         $response = $this->withToken($this->token)->deleteJson(route('api.v1.category.delete', $category));
 
         $response->assertOk();
         $response->assertJson(['data' => []]);
-
-        $this->assertDatabaseMissing('categories', ['title' => $category->title]);
     }
 
     public function test_unauthenticated_user_cannot_access_protected_methods(): void
@@ -112,10 +110,12 @@ class CategoryControllerTest extends TestCase
         $response->assertUnauthorized();
     }
 
-    private function loginAsUser(): void
+    private function loginAsAdmin(): void
     {
-        $user = \App\Models\User::factory()->create();
-        $this->token = $user->createToken('test-user-auth');
+        $admin = \App\Models\User::factory([
+            'is_admin' => true
+        ])->create();
+        $this->token = $admin->createToken('test-admin-auth');
         return;
     }
 

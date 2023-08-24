@@ -16,7 +16,7 @@ class PaymentControllerTest extends TestCase
 
     public function test_authenticated_user_can_get_payments_list(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
         Payment::factory()->count(5)->create();
 
         $response = $this->withToken($this->token)->getJson(route('api.v1.payment'));
@@ -31,7 +31,7 @@ class PaymentControllerTest extends TestCase
 
     public function test_authenticated_user_can_create_a_payment(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
 
         $paymentData = [
             'type' => PaymentType::CreditCard,
@@ -53,7 +53,7 @@ class PaymentControllerTest extends TestCase
 
     public function test_authenticated_user_can_get_a_payment(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
 
         $payment = $this->getPayment();
 
@@ -67,7 +67,7 @@ class PaymentControllerTest extends TestCase
 
     public function test_authenticated_user_can_update_a_payment(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
 
         $payment = $this->getPayment();
 
@@ -88,9 +88,9 @@ class PaymentControllerTest extends TestCase
             ]);
     }
 
-    public function it_can_delete_a_payment(): void
+    public function test_authenticated_user_can_delete_a_payment(): void
     {
-        $this->actingAs(User::factory()->create());
+        $this->loginAsAdmin();
 
         $payment = $this->getPayment();
 
@@ -126,10 +126,12 @@ class PaymentControllerTest extends TestCase
         $response->assertUnauthorized();
     }
 
-    private function loginAsUser(): void
+    private function loginAsAdmin(): void
     {
-        $user = \App\Models\User::factory()->create();
-        $this->token = $user->createToken('test-user-auth');
+        $admin = \App\Models\User::factory([
+            'is_admin' => true
+        ])->create();
+        $this->token = $admin->createToken('test-admin-auth');
         return;
     }
 

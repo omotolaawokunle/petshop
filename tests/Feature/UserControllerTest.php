@@ -13,6 +13,7 @@ class UserControllerTest extends TestCase
 {
     use DatabaseTransactions;
     protected string $token;
+
     public function test_can_create_user_account_with_valid_data(): void
     {
         $userData = [
@@ -63,7 +64,7 @@ class UserControllerTest extends TestCase
 
     public function test_update_user_account(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
         $response = $this->withToken($this->token)->putJson(route('api.v1.user.edit'), $this->getUserData());
         $response->assertOk();
         $response->assertJsonStructure([
@@ -81,7 +82,7 @@ class UserControllerTest extends TestCase
 
     public function test_cannot_update_user_account_with_invalid_data(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
         $response = $this->withToken($this->token)->putJson(route('api.v1.user.edit'), $this->getInvalidUserData());
         $response->assertStatus(ResponseCodes::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonValidationErrors([
@@ -91,7 +92,7 @@ class UserControllerTest extends TestCase
 
     public function test_delete_user_account(): void
     {
-        $this->loginAsUser();
+        $this->loginAsAdmin();
         $response = $this->withToken($this->token)->deleteJson(route('api.v1.user.delete'));
         $response->assertOk();
         $response = $this->withToken($this->token)->getJson(route('api.v1.user.show'));
@@ -108,6 +109,15 @@ class UserControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $this->token = $user->createToken('test-user-auth');
+        return;
+    }
+
+    private function loginAsAdmin(): void
+    {
+        $admin = \App\Models\User::factory([
+            'is_admin' => true
+        ])->create();
+        $this->token = $admin->createToken('test-admin-auth');
         return;
     }
 
