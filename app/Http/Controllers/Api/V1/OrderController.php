@@ -22,7 +22,6 @@ class OrderController extends Controller
 {
     /**
      * Get a listing of all orders.
-     *
      */
     public function index(Request $request, BaseFilter $filter): JsonResponse
     {
@@ -75,7 +74,6 @@ class OrderController extends Controller
 
     /**
      * Get a listing of shipped orders
-     *
      */
     public function shippedOrders(Request $request, OrderFilter $filter): JsonResponse
     {
@@ -90,7 +88,6 @@ class OrderController extends Controller
 
     /**
      * Get a listing of all orders for dashboard.
-     *
      */
     public function dashboard(Request $request, OrderFilter $filter): JsonResponse
     {
@@ -102,7 +99,6 @@ class OrderController extends Controller
 
     /**
      * Download order invoice.
-     *
      * @param Order $order The uuid of the order
      */
     public function downloadInvoice(Order $order): StreamedResponse
@@ -110,7 +106,9 @@ class OrderController extends Controller
         $items = collect($order->products)
             ->map(fn ($product) => $this->getInvoiceItem($product))
             ->all();
-        $customer = $this->getCustomerData($order->user);
+        /** @var \App\Models\User $user */
+        $user = $order->user;
+        $customer = $this->getCustomerData($user);
         $invoice = Invoice::make()
             ->name('Petshop')
             ->buyer($customer)
@@ -121,9 +119,8 @@ class OrderController extends Controller
             ->currencySymbol('$')
             ->currencyCode('USD')
             ->currencyFormat('{SYMBOL} {VALUE}')
-            ->shipping($order->delivery_fee);
+        ->shipping($order->delivery_fee ?? (float) 0);
 
-        $invoice->order = $order;
 
         return response()->streamDownload(fn () => $invoice->stream(), "{$order->uuid}.pdf", [
             'Content-Type' => 'application/pdf',

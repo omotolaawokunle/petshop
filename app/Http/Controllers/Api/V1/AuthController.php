@@ -95,6 +95,7 @@ class AuthController extends Controller
      */
     public function sendResetPasswordLinkEmail(ForgotPasswordRequest $request): JsonResponse
     {
+        /** @var User $user */
         $user = User::where('email', $request->email)->first();
         $resetToken = Password::createToken($user);
         $user->notify(new PasswordResetNotification($resetToken));

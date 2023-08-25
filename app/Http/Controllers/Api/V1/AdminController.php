@@ -16,7 +16,6 @@ class AdminController extends Controller
 {
     /**
      * Get a listing of users.
-     *
      */
     public function getUserListing(Request $request, UserFilter $userFilter): JsonResponse
     {

@@ -39,6 +39,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request): JsonResponse
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         $user->update($request->toArray());
         return $this->success(new UserResource($user));
@@ -49,6 +50,7 @@ class UserController extends Controller
      */
     public function destroy(): JsonResponse
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         Auth::logout();
         $user->delete();
