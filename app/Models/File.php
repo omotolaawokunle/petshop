@@ -11,4 +11,6 @@ class File extends Model
     use HasFactory, HasUuids;
 
     protected $guarded = [];
+
+    protected $hidden = ['id'];
 }

@@ -13,5 +13,8 @@ class Payment extends Model
     use HasFactory, HasUuids, Filterable;
 
     protected $guarded;
+
     protected $casts = ['type' => PaymentType::class, 'details' => 'array'];
+
+    protected $hidden = ['id'];
 }

@@ -15,8 +15,11 @@ class Product extends Model
     use HasFactory, SoftDeletes, HasUuids, Filterable;
 
     protected $guarded = [];
+
     protected $casts = ['metadata' => 'array'];
+
     protected $hidden = ['id'];
+
     protected $appends = ['brand'];
 
     public function category(): BelongsTo

@@ -12,4 +12,6 @@ class OrderStatus extends Model
     use HasFactory, HasUuids, Filterable;
 
     protected $guarded = [];
+
+    protected $hidden = ['id'];
 }

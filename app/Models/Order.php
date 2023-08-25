@@ -5,10 +5,9 @@ namespace App\Models;
 use App\Services\Traits\HasUuids;
 use App\Services\Traits\Filterable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 
 class Order extends Model
 {
@@ -24,17 +23,17 @@ class Order extends Model
 
     protected $with = ['user', 'orderStatus', 'payment'];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function orderStatus()
+    public function orderStatus(): BelongsTo
     {
         return $this->belongsTo(OrderStatus::class);
     }
 
-    public function payment()
+    public function payment(): BelongsTo
     {
         return $this->belongsTo(Payment::class);
     }
