@@ -1,4 +1,3 @@
-```markdown
 # Petshop Project Setup Guide
 
 This guide will help you set up the `petshop` project. It includes steps for setting up the project, seeding the database, and generating JWT token keys for encryption and decryption.
