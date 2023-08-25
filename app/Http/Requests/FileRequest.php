@@ -29,10 +29,12 @@ class FileRequest extends FormRequest
 
     public function toArray(): array
     {
+        /** @var \Illuminate\Http\UploadedFile $file */
+        $file = $this->file('file');
         return [
-            'size' => number_format($this->file('file')->getSize() / 1024) . " KB",
+            'size' => number_format($file->getSize() / 1024) . " KB",
             'name' => Str::random(),
-            'type' => $this->file('file')->getMimeType(),
+            'type' => $file->getMimeType(),
         ];
     }
 }

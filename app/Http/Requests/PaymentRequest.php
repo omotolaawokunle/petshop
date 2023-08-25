@@ -48,13 +48,22 @@ class PaymentRequest extends FormRequest
     {
         $details = $this->get('details');
         $type = $this->get('type');
-        return match ($this->get('type')) {
-            PaymentType::CreditCard->value => $this->getCreditCardValues($type, $details),
-            PaymentType::CashOnDelivery->value => $this->getCashValues($type, $details),
-            PaymentType::BankTransfer->value => $this->getBankTransferValues($type, $details),
-        };
+        switch ($type) {
+            case PaymentType::CreditCard->value:
+                return $this->getCreditCardValues($type, $details);
+            case PaymentType::CashOnDelivery->value:
+                return $this->getCashValues($type, $details);
+            case PaymentType::BankTransfer->value:
+                return $this->getBankTransferValues($type, $details);
+            default:
+                return ['type' => $type, 'details' => $details];
+        }
     }
 
+    /**
+     * @param  array<string|array> $details
+     * @return array
+     */
     public function getCreditCardValues(string $type, array $details): array
     {
         return [
@@ -68,6 +77,10 @@ class PaymentRequest extends FormRequest
         ];
     }
 
+    /**
+     * @param  array<string|array> $details
+     * @return array
+     */
     public function getBankTransferValues(string $type, array $details): array
     {
         return [
@@ -80,6 +93,10 @@ class PaymentRequest extends FormRequest
         ];
     }
 
+    /**
+     * @param  array<string|array> $details
+     * @return array
+     */
     public function getCashValues(string $type, array $details): array
     {
         return [

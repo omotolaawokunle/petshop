@@ -60,7 +60,10 @@ class OrderRequest extends FormRequest
 
     public function getOrderAmount(): float
     {
-        return (float) collect($this->get('products'))->map(function ($row) {
+        /** @var array<array> $products */
+        $products = $this->get('products', []);
+        return (float) collect($products)->map(function ($row) {
+            /** @var Product $product */
             $product = Product::select('uuid', 'price')
                 ->where('uuid', $row['product'])
                 ->first();
@@ -70,7 +73,9 @@ class OrderRequest extends FormRequest
 
     public function getDeliveryFee(): float
     {
-        if ($this->getOrderAmount() > 500) return (float) 15;
+        if ($this->getOrderAmount() > 500) {
+            return (float) 15;
+        }
         return (float) 0;
     }
 }
