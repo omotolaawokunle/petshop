@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b6ce3340140f2b0520cca4073dc4751",
+    "content-hash": "ed687e868d169275302610ee19fe26ad",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -3060,6 +3060,73 @@
                 }
             ],
             "time": "2023-02-08T01:06:31+00:00"
+        },
+        {
+            "name": "omotolaawokunle/exchange-rate",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./packages/exchange-rate",
+                "reference": "d5342c5cf08055df7a51b59610f0d3e9033d8fa3"
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.7",
+                "illuminate/support": "^9.28|^10.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.5",
+                "orchestra/testbench": "^7.7|^8.0",
+                "phpunit/phpunit": "^9.5.24"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Omotolaawokunle\\ExchangeRate\\ExchangeRateServiceProvider"
+                    ],
+                    "aliases": {
+                        "ExchangeRate": "Omotolaawokunle\\ExchangeRate\\Facades\\ExchangeRateFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Omotolaawokunle\\ExchangeRate\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Omotolaawokunle\\ExchangeRate\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/phpunit"
+                ],
+                "test-coverage": [
+                    "vendor/bin/phpunit --coverage-html coverage"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Omotola Awokunle",
+                    "email": "omotolaawokunle@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A laravel package to get current exchange rates",
+            "homepage": "https://github.com/omotolaawokunle/exchange-rate",
+            "keywords": [
+                "exchange-rate",
+                "omotolaawokunle"
+            ],
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "phenx/php-font-lib",
@@ -11334,7 +11401,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "omotolaawokunle/exchange-rate": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
