@@ -16,18 +16,10 @@ class JwtGuard implements Guard
 {
     use GuardHelpers;
 
-    /**
-     * The request instance.
-     *
-     * @var \Illuminate\Http\Request
-     */
-    protected $request;
+    protected Request $request;
 
     /**
      * Create a new authentication guard.
-     *
-     * @param  \Illuminate\Contracts\Auth\UserProvider  $provider
-     * @param  \Illuminate\Http\Request  $request
      * @return void
      */
     public function __construct(UserProvider $provider, Request $request)
@@ -62,12 +54,13 @@ class JwtGuard implements Guard
      */
     protected function validateToken(): ?Authenticatable
     {
-        if (is_null($this->getTokenForRequest())) {
-            return null;
-        }
         /** @var string $bearerToken */
         $bearerToken = $this->getTokenForRequest();
+        if ($bearerToken === "") {
+            return null;
+        }
         $token = (array) JWT::decode($bearerToken, new Key(config('jwt.key.public'), 'RS256'));
+        /** @var \App\Models\User $user */
         $user = $this->provider->retrieveById($token['user_uuid']);
         if ($user) {
             $savedToken = JwtToken::where('user_id', $user->id)->where('unique_id', $token['unique_id'])->first();
@@ -84,15 +77,15 @@ class JwtGuard implements Guard
      *
      * @return string
      */
-    public function getTokenForRequest(): ?string
+    public function getTokenForRequest(): string
     {
-        return $this->request->bearerToken();
+        return $this->request->bearerToken() ?? "";
     }
 
     /**
      * Validate a user's credentials.
      *
-     * @param  array  $credentials
+     * @param  array<int|string>  $credentials
      * @return bool
      */
     public function validate(array $credentials = []): bool
@@ -111,8 +104,9 @@ class JwtGuard implements Guard
     public function logout(): void
     {
         $token = (array) JWT::decode($this->getTokenForRequest(), new Key(config('jwt.key.public'), 'RS256'));
-
-        JwtToken::where('unique_id', $token['unique_id'])->where('user_id', $this->user()->id)->delete();
+        /** @var \App\Models\User $user */
+        $user = $this->user();
+        JwtToken::where('unique_id', $token['unique_id'])->where('user_id', $user->id)->delete();
         $this->user = null;
         return;
     }
