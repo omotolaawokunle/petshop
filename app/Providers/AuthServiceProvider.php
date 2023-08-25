@@ -3,10 +3,13 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use Dedoc\Scramble\Scramble;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Contracts\Foundation\Application;
 use App\Services\Auth\Guards\JwtGuard;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Illuminate\Contracts\Foundation\Application;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -26,6 +29,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         Auth::extend('jwt', function (Application $app, $name, array $config) {
             return new JwtGuard(Auth::createUserProvider($config['provider']), $app['request']);
+        });
+
+        Scramble::extendOpenApi(function (OpenApi $openApi) {
+            $openApi->secure(
+                SecurityScheme::http('Bearer', 'JWT')
+            );
         });
     }
 }
