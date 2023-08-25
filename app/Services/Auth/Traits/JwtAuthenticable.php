@@ -32,7 +32,11 @@ trait JwtAuthenticable
     private function generateUniqueId(): string
     {
         $uniqueId = Str::uuid();
-        return (string) Str::replace('-', '', $uniqueId);
+        $id = Str::replace('-', '', $uniqueId);
+        if (is_array($id)) {
+            return $id[0];
+        }
+        return $id;
     }
 
     public function getAuthIdentifierName(): string
