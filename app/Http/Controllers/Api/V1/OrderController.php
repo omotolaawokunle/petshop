@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\User;
 use App\Models\Order;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\OrderRequest;
+use App\Services\Traits\Invoicable;
 use App\Http\Controllers\Controller;
 use App\Services\Filters\BaseFilter;
 use App\Http\Resources\OrderResource;
 use App\Services\Filters\OrderFilter;
 use App\Http\Resources\OrderCollection;
-use LaravelDaily\Invoices\Classes\Buyer;
 use LaravelDaily\Invoices\Facades\Invoice;
-use LaravelDaily\Invoices\Classes\InvoiceItem;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class OrderController extends Controller
 {
+    use Invoicable;
     /**
      * Get a listing of all orders.
      */
@@ -103,50 +102,17 @@ class OrderController extends Controller
      */
     public function downloadInvoice(Order $order): StreamedResponse
     {
-        $items = collect($order->products)
-            ->map(fn ($product) => $this->getInvoiceItem($product))
-            ->all();
         /** @var \App\Models\User $user */
         $user = $order->user;
-        $customer = $this->getCustomerData($user);
-        $invoice = Invoice::make()
-            ->name('Petshop')
-            ->buyer($customer)
-            ->addItems($items)
-            ->series(Str::orderedUuid())
-            ->serialNumberFormat('{SEQUENCE}')
-            ->filename($order->uuid)
-            ->currencySymbol('$')
-            ->currencyCode('USD')
-            ->currencyFormat('{SYMBOL} {VALUE}')
-        ->shipping($order->delivery_fee ?? (float) 0);
-
-
+        $invoice = $this->createInvoice(
+            customer: $user,
+            name: 'Petshop',
+            deliveryFee: $order->deliveryFee ?? 0,
+            filename: $order->uuid,
+            items: $order->products
+        );
         return response()->streamDownload(fn () => $invoice->stream(), "{$order->uuid}.pdf", [
             'Content-Type' => 'application/pdf',
         ]);
-    }
-
-    protected function getCustomerData(User $user): Buyer
-    {
-        return new Buyer([
-            'name' => $user->first_name,
-            'custom_fields' => [
-                'last_name' => $user->last_name,
-                'ID' => $user->uuid,
-                'phone' => $user->phone_number,
-                'email' => $user->email,
-                'address' => $user->address,
-            ]
-        ]);
-    }
-
-    protected function getInvoiceItem(array $product): InvoiceItem
-    {
-        return (new InvoiceItem())
-            ->title($product['product'])
-            ->pricePerUnit($product['price'])
-            ->quantity($product['quantity'])
-            ->description($product['uuid']);
     }
 }
