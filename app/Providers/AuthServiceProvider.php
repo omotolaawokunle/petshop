@@ -28,7 +28,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Auth::extend('jwt', function (Application $app, $name, array $config) {
-            return new JwtGuard(Auth::createUserProvider($config['provider']), $app['request']);
+            /** @var \Illuminate\Contracts\Auth\UserProvider $provider */
+            $provider = Auth::createUserProvider($config['provider']);
+            return new JwtGuard($provider, $app->get('request'));
         });
 
         Scramble::extendOpenApi(function (OpenApi $openApi) {
