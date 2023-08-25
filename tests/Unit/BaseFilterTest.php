@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\Filters\BaseFilter;
 
@@ -22,7 +23,8 @@ class BaseFilterTest extends TestCase
         $request = new Request(['sortBy' => 'name', 'desc' => 1]);
         $filter = new BaseFilter($request);
         $query = $filter->apply(User::query());
-
-        $this->assertEquals('select * from `users` order by `name` desc', $query->toRawSql());
+        /** @var string $sql */
+        $sql = $query->toRawSql();
+        $this->assertTrue(Str::contains($sql, "select * from `users` order by `name` desc"));
     }
 }

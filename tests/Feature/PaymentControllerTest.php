@@ -1,12 +1,11 @@
 <?php
 
-namespace Tests\Feature\Api\V1;
+namespace Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Models\User;
 use App\Models\Payment;
 use App\Enums\PaymentType;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PaymentControllerTest extends TestCase
 {

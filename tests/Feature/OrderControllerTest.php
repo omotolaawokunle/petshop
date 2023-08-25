@@ -33,11 +33,28 @@ class OrderControllerTest extends TestCase
             ]);
     }
 
+    public function test_dashboard_orders_can_be_listed(): void
+    {
+        $this->loginAsAdmin();
+        Order::factory(10)->create();
+
+        $response = $this->withToken($this->token)->getJson(route('api.v1.order.dashboard'));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'amount', 'created_at', 'delivery_fee', 'products', 'shipped_at', 'uuid', 'order_status', 'user'
+                    ]
+                ]
+            ]);
+    }
+
     public function test_order_can_be_stored(): void
     {
         $user = $this->loginAsUser();
         $orderStatus = OrderStatus::factory()->create();
         $payment = Payment::factory()->create();
+        /** @var array<Product> $products */
         $products = Product::factory(2)->create();
 
         $response = $this->withToken($this->token)->postJson(route('api.v1.order.create'), [
@@ -81,6 +98,7 @@ class OrderControllerTest extends TestCase
         $order = Order::factory()->create();
         $newOrderStatus = OrderStatus::factory()->create();
         $newPayment = Payment::factory()->create();
+        /** @var array<Product> $products */
         $products = Product::factory(2)->create();
 
         $response = $this->withToken($this->token)->putJson(route('api.v1.order.edit', $order), [
@@ -163,10 +181,5 @@ class OrderControllerTest extends TestCase
         $user = User::factory()->create();
         $this->token = $user->createToken('test-user-auth');
         return $user;
-    }
-
-    private function getOrder(): Order
-    {
-        return Order::factory()->create();
     }
 }
