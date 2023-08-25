@@ -21,7 +21,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Get a listing of all orders.
+     *
      */
     public function index(Request $request, BaseFilter $filter): JsonResponse
     {
@@ -33,7 +34,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a new order.
      */
     public function store(OrderRequest $request): JsonResponse
     {
@@ -42,7 +43,8 @@ class OrderController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get an existing order.
+     * @param Order $order The uuid of the order
      */
     public function show(Order $order): JsonResponse
     {
@@ -50,7 +52,8 @@ class OrderController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an existing order.
+     * @param Order $order The uuid of the order
      */
     public function update(OrderRequest $request, Order $order): JsonResponse
     {
@@ -59,7 +62,8 @@ class OrderController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete existing order.
+     * @param Order $order The uuid of the order
      */
     public function destroy(Order $order): JsonResponse
     {
@@ -69,6 +73,10 @@ class OrderController extends Controller
         return $this->error("Error deleting order!");
     }
 
+    /**
+     * Get a listing of shipped orders
+     *
+     */
     public function shippedOrders(Request $request, OrderFilter $filter): JsonResponse
     {
         $orders = Order::filter($filter)
@@ -80,6 +88,10 @@ class OrderController extends Controller
         return $this->success(data: new OrderCollection($orders), onlyData: true);
     }
 
+    /**
+     * Get a listing of all orders for dashboard.
+     *
+     */
     public function dashboard(Request $request, OrderFilter $filter): JsonResponse
     {
         $orders = Order::filter($filter)
@@ -88,6 +100,11 @@ class OrderController extends Controller
         return $this->success(data: new OrderCollection($orders), onlyData: true);
     }
 
+    /**
+     * Download order invoice.
+     *
+     * @param Order $order The uuid of the order
+     */
     public function downloadInvoice(Order $order): StreamedResponse
     {
         $items = collect($order->products)

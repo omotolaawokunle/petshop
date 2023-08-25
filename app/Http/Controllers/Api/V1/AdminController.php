@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\AdminRequest;
 use App\Http\Controllers\Controller;
@@ -14,9 +15,10 @@ use App\Http\Resources\AdminResource;
 class AdminController extends Controller
 {
     /**
-     * Display a listing of users.
+     * Get a listing of users.
+     *
      */
-    public function getUserListing(Request $request, UserFilter $userFilter)
+    public function getUserListing(Request $request, UserFilter $userFilter): JsonResponse
     {
         $users = User::filter($userFilter)
             ->where('is_admin', 0)
@@ -29,7 +31,7 @@ class AdminController extends Controller
     /**
      * Create admin user.
      */
-    public function store(AdminRequest $request)
+    public function store(AdminRequest $request): JsonResponse
     {
         $admin = User::create($request->toArray());
         $admin->update(['is_admin' => 1]);
@@ -38,17 +40,19 @@ class AdminController extends Controller
 
     /**
      * Update user account.
+     * @param User $user The uuid of the user
      */
-    public function updateUser(UserRequest $request, User $user)
+    public function updateUser(UserRequest $request, User $user): JsonResponse
     {
         $user->update($request->toArray());
         return $this->success(new UserResource($user));
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete a user account.
+     * @param User $user The uuid of the user
      */
-    public function destroyUser(User $user)
+    public function destroyUser(User $user): JsonResponse
     {
         $user->delete();
         return $this->success([]);

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 class FileController extends Controller
 {
     /**
-     * Store a newly created resource in storage.
+     * Upload a file.
      */
     public function store(FileRequest $request)
     {
@@ -21,7 +21,8 @@ class FileController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Read a file.
+     * @param File $file The uuid of the file.
      */
     public function show(File $file)
     {

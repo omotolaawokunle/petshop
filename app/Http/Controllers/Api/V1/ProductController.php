@@ -13,7 +13,8 @@ use App\Services\Filters\ProductFilter;
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Get a listing of all products.
+     * @unauthenticated
      */
     public function index(Request $request, ProductFilter $filter): JsonResponse
     {
@@ -26,7 +27,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a product.
      */
     public function store(ProductRequest $request): JsonResponse
     {
@@ -35,7 +36,9 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get an existing product.
+     * @aunauthenticated
+     * @param Product $product The uuid of the product
      */
     public function show(Product $product): JsonResponse
     {
@@ -43,7 +46,8 @@ class ProductController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an existing product.
+     * @param Product $product The uuid of the product
      */
     public function update(ProductRequest $request, Product $product): JsonResponse
     {
@@ -52,7 +56,8 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete an existing product.
+     * @param Product $product The uuid of the product
      */
     public function destroy(Product $product): JsonResponse
     {

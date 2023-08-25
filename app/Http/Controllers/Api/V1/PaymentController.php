@@ -12,7 +12,7 @@ use App\Http\Requests\PaymentRequest;
 class PaymentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Get a listing of all payments.
      */
     public function index(Request $request, BaseFilter $filter): JsonResponse
     {
@@ -24,7 +24,7 @@ class PaymentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a payment.
      */
     public function store(PaymentRequest $request): JsonResponse
     {
@@ -33,7 +33,8 @@ class PaymentController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get an existing payment.
+     * @param Payment $payment The uuid of the payment
      */
     public function show(Payment $payment): JsonResponse
     {
@@ -41,7 +42,8 @@ class PaymentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an existing payment.
+     * @param Payment $payment The uuid of the payment
      */
     public function update(PaymentRequest $request, Payment $payment): JsonResponse
     {
@@ -50,7 +52,8 @@ class PaymentController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete an existing payment.
+     * @param Payment $payment The uuid of the payment
      */
     public function destroy(Payment $payment): JsonResponse
     {

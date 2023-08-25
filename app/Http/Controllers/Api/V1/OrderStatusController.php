@@ -12,7 +12,8 @@ use App\Http\Requests\OrderStatusRequest;
 class OrderStatusController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Get a listing of all order statuses.
+     * @unauthenticated
      */
     public function index(Request $request, BaseFilter $filter): JsonResponse
     {
@@ -24,7 +25,7 @@ class OrderStatusController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create an order status.
      */
     public function store(OrderStatusRequest $request): JsonResponse
     {
@@ -33,7 +34,9 @@ class OrderStatusController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get an existing order status.
+     * @unauthenticated
+     * @param OrderStatus $orderStatus The uuid of the order status
      */
     public function show(OrderStatus $orderStatus): JsonResponse
     {
@@ -41,7 +44,8 @@ class OrderStatusController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an existing order status.
+     * @param OrderStatus $orderStatus The uuid of the order status
      */
     public function update(OrderStatusRequest $request, OrderStatus $orderStatus): JsonResponse
     {
@@ -50,7 +54,8 @@ class OrderStatusController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete an existing order status.
+     * @param OrderStatus $orderStatus The uuid of the order status
      */
     public function destroy(OrderStatus $orderStatus): JsonResponse
     {

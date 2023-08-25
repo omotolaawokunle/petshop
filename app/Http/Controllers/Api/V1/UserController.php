@@ -13,7 +13,8 @@ use App\Http\Resources\UserWithTokenResource;
 class UserController extends Controller
 {
     /**
-     * Store a newly created resource in storage.
+     * Create a user account.
+     * @unauthenticated
      */
     public function store(UserRequest $request, User $user): JsonResponse
     {
@@ -22,7 +23,7 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get current authenticated user account.
      */
     public function show(): JsonResponse
     {
@@ -30,7 +31,7 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update current authenticated user account.
      */
     public function update(UserRequest $request): JsonResponse
     {
@@ -40,7 +41,7 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete current authenticated user account.
      */
     public function destroy(): JsonResponse
     {

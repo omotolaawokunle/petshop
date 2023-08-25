@@ -11,6 +11,10 @@ use App\Http\Requests\CategoryRequest;
 
 class CategoryController extends Controller
 {
+    /**
+     * Get a listing of categories
+     * @unauthenticated
+     */
     public function index(Request $request, BaseFilter $filter): JsonResponse
     {
         $categories = Category::filter($filter)
@@ -21,7 +25,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a new category.
      */
     public function store(CategoryRequest $request): JsonResponse
     {
@@ -31,7 +35,9 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get an existing category.
+     * @unauthenticated
+     * @param Category $category The uuid of the category.
      */
     public function show(Category $category): JsonResponse
     {
@@ -39,7 +45,8 @@ class CategoryController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an existing category.
+     * @param Category $category The uuid of the category.
      */
     public function update(CategoryRequest $request, Category $category): JsonResponse
     {
@@ -48,7 +55,8 @@ class CategoryController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete an existing category.
+     * @param Category $category The uuid of the category.
      */
     public function destroy(Category $category): JsonResponse
     {

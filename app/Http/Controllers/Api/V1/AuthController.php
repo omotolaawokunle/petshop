@@ -16,7 +16,14 @@ use App\Notifications\PasswordResetNotification;
 
 class AuthController extends Controller
 {
-    public function adminLogin(LoginRequest $request)
+    /**
+     * Login an admin account
+     * @unauthenticated
+     * @response array{success: bool, data: array{token: string}, error: string, errors: array}
+     * @param  LoginRequest $request
+     * @return JsonResponse
+     */
+    public function adminLogin(LoginRequest $request): JsonResponse
     {
         if (Auth::attempt($request->validated())) {
             /** @var \App\Models\User $user */
@@ -34,13 +41,25 @@ class AuthController extends Controller
         );
     }
 
-    public function adminLogout()
+    /**
+     * Log out an admin account
+     * @response array{success: bool, data: array, error: string, errors: array}
+     * @return JsonResponse
+     */
+    public function adminLogout(): JsonResponse
     {
         Auth::logout();
         return $this->success(data: []);
     }
 
-    public function userLogin(LoginRequest $request)
+    /**
+     * Login an user account
+     * @unauthenticated
+     * @response array{success: bool, data: array{token: string}, error: string, errors: array}
+     * @param  LoginRequest $request
+     * @return JsonResponse
+     */
+    public function userLogin(LoginRequest $request): JsonResponse
     {
         if (Auth::attempt($request->validated())) {
             /** @var \App\Models\User $user */
@@ -56,12 +75,24 @@ class AuthController extends Controller
         );
     }
 
-    public function userLogout()
+    /**
+     * Log out a user account
+     * @response array{success: bool, data: array, error: string, errors: array}
+     * @return JsonResponse
+     */
+    public function userLogout(): JsonResponse
     {
         Auth::logout();
         return $this->success(data: []);
     }
 
+    /**
+     * Creates a token to reset a user password
+     * @unauthenticated
+     * @response array{success: bool, data: array{reset_token: string}, error: string, errors: array}
+     * @param ForgotPasswordRequest $request
+     * @return JsonResponse
+     */
     public function sendResetPasswordLinkEmail(ForgotPasswordRequest $request): JsonResponse
     {
         $user = User::where('email', $request->email)->first();
@@ -70,7 +101,14 @@ class AuthController extends Controller
         return $this->success(['reset_token' => $resetToken]);
     }
 
-    public function resetPassword(ResetPasswordRequest $request)
+    /**
+     * Reset a user password with tokken
+     * @unauthenticated
+     * @response array{success: bool, data: array{message: string}, error: string, errors: array}
+     * @param ResetPasswordRequest $request
+     * @return JsonResponse
+     */
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
         $response = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),

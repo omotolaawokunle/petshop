@@ -8,9 +8,17 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Requests\BrandRequest;
 use App\Http\Controllers\Controller;
 use App\Services\Filters\BaseFilter;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class BrandController extends Controller
 {
+    /**
+     * Get a listing of all brands
+     * @unauthenticated
+     * @param  Request      $request
+     * @param  BaseFilter   $filter
+     * @return JsonResponse
+     */
     public function index(Request $request, BaseFilter $filter): JsonResponse
     {
         $brands = Brand::filter($filter)
@@ -21,7 +29,9 @@ class BrandController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a new brand.
+     * @param BrandRequest $request
+     * @return JsonResponse
      */
     public function store(BrandRequest $request): JsonResponse
     {
@@ -31,7 +41,10 @@ class BrandController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get a brand.
+     * @unauthenticated
+     * @param Brand $brand The uuid of the brand.
+     * @return JsonResponse
      */
     public function show(Brand $brand): JsonResponse
     {
@@ -39,7 +52,10 @@ class BrandController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an existing brand.
+     * @param BrandRequest $request
+     * @param Brand $brand The uuid of the brand.
+     * @return JsonResponse
      */
     public function update(BrandRequest $request, Brand $brand): JsonResponse
     {
@@ -48,7 +64,9 @@ class BrandController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete an existing brand.
+     * @param Brand $brand The uuid of the brand.
+     * @return JsonResponse
      */
     public function destroy(Brand $brand): JsonResponse
     {
