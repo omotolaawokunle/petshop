@@ -1,0 +1,1806 @@
+openapi: 3.0.0
+info:
+  title: Petshop
+  version: 1.0.0
+servers:
+  - url: https://petshop.test/api/v1
+security:
+  - http: []
+paths:
+  /admin/user-listing:
+    get:
+      operationId: v1.admin.user-listing
+      summary: Get a listing of users
+      tags:
+        - Admin
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          description: The current page number
+        - in: query
+          name: limit
+          type: integer
+          description: The numbers of items to return.
+        - in: query
+          name: sortBy
+          type: string
+        - in: query
+          name: desc
+          type: boolean
+        - in: query
+          name: first_name
+          type: string
+        - in: query
+          name: phone
+          type: string
+        - in: query
+          name: email
+          type: string
+        - in: query
+          name: address
+          type: string
+        - in: query
+          name: created_at
+          type: string
+        - in: query
+          name: marketing
+          type: boolean
+          schema:
+            type: string
+            enum:
+              - '0'
+              - '1'
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /admin/create:
+    post:
+      operationId: v1.admin.create
+      summary: Create admin user
+      tags:
+        - Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                avatar:
+                  type: string
+                  format: uuid
+                address:
+                  type: string
+                phone_number:
+                  type: number
+                marketing:
+                  type: boolean
+                password_confirmation:
+                  type: string
+              required:
+                - first_name
+                - last_name
+                - email
+                - password
+                - address
+                - phone_number
+                - password_confirmation
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /admin/user-edit/{user}:
+    put:
+      operationId: v1.admin.users.edit
+      summary: Update user account
+      tags:
+        - Admin
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: The uuid of the user
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                avatar:
+                  type: string
+                  format: uuid
+                address:
+                  type: string
+                phone_number:
+                  type: number
+                is_marketing:
+                  type: boolean
+                password_confirmation:
+                  type: string
+              required:
+                - first_name
+                - last_name
+                - email
+                - password
+                - address
+                - phone_number
+                - password_confirmation
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /admin/user-delete/{user}:
+    delete:
+      operationId: v1.admin.users.delete
+      summary: Delete a user account
+      tags:
+        - Admin
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: The uuid of the user
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /admin/login:
+    post:
+      operationId: v1.admin.login
+      summary: Login an admin account
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+      security:
+        - {}
+  /admin/logout:
+    post:
+      operationId: v1.admin.logout
+      summary: Log out an admin account
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /user/login:
+    post:
+      operationId: v1.user.login
+      summary: Login an user account
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+      security:
+        - {}
+  /user/forgot-password:
+    post:
+      operationId: v1.user.forgot-password
+      summary: Creates a token to reset a user password
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+              required:
+                - email
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+      security:
+        - {}
+  /user/reset-password:
+    post:
+      operationId: v1.user.reset-password
+      summary: Reset a user password with tokken
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+              required:
+                - token
+                - email
+                - password
+                - password_confirmation
+      responses:
+          "200":
+            "description": "OK"
+          "401":
+            "description": "Unauthorized"
+          "404":
+            "description": "Page not found"
+          "422":
+            "description": "Unprocessable Entity"
+          "500":
+            "description": "Internal server error"
+      security:
+        - {}
+  /user/logout:
+    post:
+      operationId: v1.user.logout
+      summary: Log out a user account
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /brands:
+    get:
+      operationId: v1.brand
+      summary: Get a listing of all brands
+      tags:
+        - Brand
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          description: The current page number
+        - in: query
+          name: limit
+          type: integer
+          description: The numbers of items to return.
+        - in: query
+          name: sortBy
+          type: string
+        - in: query
+          name: desc
+          type: boolean
+          schema:
+            type: boolean
+            enum:
+              - true
+              - false
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+      security:
+        - {}
+  /brand/{brand}:
+    get:
+      operationId: v1.brand.show
+      summary: Get a brand
+      tags:
+        - Brand
+      parameters:
+        - name: brand
+          in: path
+          required: true
+          description: The uuid of the brand.
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+      security:
+        - {}
+    put:
+      operationId: v1.brand.edit
+      summary: Update an existing brand
+      tags:
+        - Brand
+      parameters:
+        - name: brand
+          in: path
+          required: true
+          description: The uuid of the brand.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+              required:
+                - title
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+    delete:
+      operationId: v1.brand.delete
+      summary: Delete an existing brand
+      tags:
+        - Brand
+      parameters:
+        - name: brand
+          in: path
+          required: true
+          description: The uuid of the brand.
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /brand/create:
+    post:
+      operationId: v1.brand.create
+      summary: Create a new brand
+      tags:
+        - Brand
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+              required:
+                - title
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /categories:
+    get:
+      operationId: v1.category
+      summary: Get a listing of categories
+      tags:
+        - Category
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          description: The current page number
+        - in: query
+          name: limit
+          type: integer
+          description: The numbers of items to return.
+        - in: query
+          name: sortBy
+          type: string
+        - in: query
+          name: desc
+          type: boolean
+          schema:
+            type: boolean
+            enum:
+              - true
+              - false
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+      security:
+        - {}
+  /category/{category}:
+    get:
+      operationId: v1.category.show
+      summary: Get an existing category
+      tags:
+        - Category
+      parameters:
+        - name: category
+          in: path
+          required: true
+          description: The uuid of the category.
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+      security:
+        - {}
+    put:
+      operationId: v1.category.edit
+      summary: Update an existing category
+      tags:
+        - Category
+      parameters:
+        - name: category
+          in: path
+          required: true
+          description: The uuid of the category.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+              required:
+                - title
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+    delete:
+      operationId: v1.category.delete
+      summary: Delete an existing category
+      tags:
+        - Category
+      parameters:
+        - name: category
+          in: path
+          required: true
+          description: The uuid of the category.
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /category/create:
+    post:
+      operationId: v1.category.create
+      summary: Create a new category
+      tags:
+        - Category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+              required:
+                - title
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /file/upload:
+    post:
+      operationId: v1.file.upload
+      summary: Upload a file
+      tags:
+        - File
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+              required:
+                - file
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /file/{file}:
+    get:
+      operationId: v1.file.download
+      summary: Read a file
+      tags:
+        - File
+      parameters:
+        - name: file
+          in: path
+          required: true
+          description: The uuid of the file.
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /orders:
+    get:
+      operationId: v1.order
+      summary: Get a listing of all orders
+      tags:
+        - Order
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          description: The current page number
+        - in: query
+          name: limit
+          type: integer
+          description: The numbers of items to return.
+        - in: query
+          name: sortBy
+          type: string
+        - in: query
+          name: desc
+          type: boolean
+          schema:
+            type: boolean
+            enum:
+              - true
+              - false
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /orders/dashboard:
+    get:
+      operationId: v1.order.dashboard
+      summary: Get a listing of all orders for dashboard
+      tags:
+        - Order
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          description: The current page number
+        - in: query
+          name: limit
+          type: integer
+          description: The numbers of items to return.
+        - in: query
+          name: sortBy
+          type: string
+        - in: query
+          name: desc
+          type: boolean
+          schema:
+            type: boolean
+            enum:
+              - true
+              - false
+        - in: query
+          name: categoryUuid
+          type: string
+        - in: query
+          name: orderUuid
+          type: string
+        - in: query
+          name: dateRange
+          type: object
+          schema:
+            type: object
+            properties:
+              from:
+                type: string
+              to:
+                type: string
+        - in: query
+          name: fixRange
+          type: boolean
+          schema:
+            type: string
+            enum:
+              - today
+              - monthly
+              - yearly
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+
+  /orders/shipment-locator:
+    get:
+      operationId: v1.order.shipped
+      summary: Get a listing of shipped orders
+      tags:
+        - Order
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          description: The current page number
+        - in: query
+          name: limit
+          type: integer
+          description: The numbers of items to return.
+        - in: query
+          name: sortBy
+          type: string
+        - in: query
+          name: desc
+          type: boolean
+          schema:
+            type: boolean
+            enum:
+              - true
+              - false
+        - in: query
+          name: categoryUuid
+          type: string
+        - in: query
+          name: orderUuid
+          type: string
+        - in: query
+          name: dateRange
+          type: object
+          schema:
+            type: object
+            properties:
+              from:
+                type: string
+              to:
+                type: string
+        - in: query
+          name: fixRange
+          type: boolean
+          schema:
+            type: string
+            enum:
+              - today
+              - monthly
+              - yearly
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /order/{order}:
+    get:
+      operationId: v1.order.show
+      summary: Get an existing order
+      tags:
+        - Order
+      parameters:
+        - name: order
+          in: path
+          required: true
+          description: The uuid of the order
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+    put:
+      operationId: v1.order.edit
+      summary: Update an existing order
+      tags:
+        - Order
+      parameters:
+        - name: order
+          in: path
+          required: true
+          description: The uuid of the order
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order_status_uuid:
+                  type: string
+                payment_uuid:
+                  type: string
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      product:
+                        type: string
+                      quantity:
+                        type: integer
+                        minimum: 1
+                    required:
+                      - product
+                      - quantity
+                address:
+                  type: object
+                  properties:
+                    shipping:
+                      type: string
+                    billing:
+                      type: string
+                  required:
+                    - shipping
+                    - billing
+              required:
+                - order_status_uuid
+                - payment_uuid
+                - products
+                - address
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+    delete:
+      operationId: v1.order.delete
+      summary: Delete existing order
+      tags:
+        - Order
+      parameters:
+        - name: order
+          in: path
+          required: true
+          description: The uuid of the order
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /order/{order}/download:
+    get:
+      operationId: v1.order.download
+      summary: Download order invoice
+      tags:
+        - Order
+      parameters:
+        - name: order
+          in: path
+          required: true
+          description: The uuid of the order
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /order/create:
+    post:
+      operationId: v1.order.create
+      summary: Create a new order
+      tags:
+        - Order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order_status_uuid:
+                  type: string
+                payment_uuid:
+                  type: string
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      product:
+                        type: string
+                      quantity:
+                        type: integer
+                        minimum: 1
+                    required:
+                      - product
+                      - quantity
+                address:
+                  type: object
+                  properties:
+                    shipping:
+                      type: string
+                    billing:
+                      type: string
+                  required:
+                    - shipping
+                    - billing
+              required:
+                - order_status_uuid
+                - payment_uuid
+                - products
+                - address
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /order-statuses:
+    get:
+      operationId: v1.order-status
+      summary: Get a listing of all order statuses
+      tags:
+        - OrderStatus
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          description: The current page number
+        - in: query
+          name: limit
+          type: integer
+          description: The numbers of items to return.
+        - in: query
+          name: sortBy
+          type: string
+        - in: query
+          name: desc
+          type: boolean
+          schema:
+            type: boolean
+            enum:
+              - true
+              - false
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+      security:
+        - {}
+  /order-status/{orderStatus}:
+    get:
+      operationId: v1.order-status.show
+      summary: Get an existing order status
+      tags:
+        - OrderStatus
+      parameters:
+        - name: orderStatus
+          in: path
+          required: true
+          description: The uuid of the order status
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+      security:
+        - {}
+    put:
+      operationId: v1.order-status.edit
+      summary: Update an existing order status
+      tags:
+        - OrderStatus
+      parameters:
+        - name: orderStatus
+          in: path
+          required: true
+          description: The uuid of the order status
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+              required:
+                - title
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+    delete:
+      operationId: v1.order-status.delete
+      summary: Delete an existing order status
+      tags:
+        - OrderStatus
+      parameters:
+        - name: orderStatus
+          in: path
+          required: true
+          description: The uuid of the order status
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /order-status/create:
+    post:
+      operationId: v1.order-status.create
+      summary: Create an order status
+      tags:
+        - OrderStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+              required:
+                - title
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /payments:
+    get:
+      operationId: v1.payment
+      summary: Get a listing of all payments
+      tags:
+        - Payment
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          description: The current page number
+        - in: query
+          name: limit
+          type: integer
+          description: The numbers of items to return.
+        - in: query
+          name: sortBy
+          type: string
+        - in: query
+          name: desc
+          type: boolean
+          schema:
+            type: boolean
+            enum:
+              - true
+              - false
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /payment/{payment}:
+    get:
+      operationId: v1.payment.show
+      summary: Get an existing payment
+      tags:
+        - Payment
+      parameters:
+        - name: payment
+          in: path
+          required: true
+          description: The uuid of the payment
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+    put:
+      operationId: v1.payment.edit
+      summary: Update an existing payment
+      tags:
+        - Payment
+      parameters:
+        - name: payment
+          in: path
+          required: true
+          description: The uuid of the payment
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  $ref: '#/components/schemas/PaymentType'
+                details:
+                  type: object
+                  properties:
+                    holder_name:
+                      type: string
+                    number:
+                      type: string
+                    ccv:
+                      type: integer
+                    expire_date:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    address:
+                      type: string
+                    swift:
+                      type: string
+                    iban:
+                      type: string
+                    name:
+                      type: string
+              required:
+                - type
+                - details
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+    delete:
+      operationId: v1.payment.delete
+      summary: Delete an existing payment
+      tags:
+        - Payment
+      parameters:
+        - name: payment
+          in: path
+          required: true
+          description: The uuid of the payment
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /payment/create:
+    post:
+      operationId: v1.payment.create
+      summary: Create a payment
+      tags:
+        - Payment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  $ref: '#/components/schemas/PaymentType'
+                details:
+                  type: object
+                  properties:
+                    holder_name:
+                      type: string
+                    number:
+                      type: string
+                    ccv:
+                      type: integer
+                    expire_date:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    address:
+                      type: string
+                    swift:
+                      type: string
+                    iban:
+                      type: string
+                    name:
+                      type: string
+              required:
+                - type
+                - details
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /products:
+    get:
+      operationId: v1.product
+      summary: Get a listing of all products
+      tags:
+        - Product
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          description: The current page number
+        - in: query
+          name: limit
+          type: integer
+          description: The numbers of items to return.
+        - in: query
+          name: sortBy
+          type: string
+        - in: query
+          name: desc
+          type: boolean
+          schema:
+            type: boolean
+            enum:
+              - true
+              - false
+        - in: query
+          name: category
+          description: The category uuid
+          type: string
+        - in: query
+          name: price
+          type: integer
+        - in: query
+          name: brand
+          description: The brand uuid
+          type: string
+        - in: query
+          name: title
+          type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+      security:
+        - {}
+  /product/{product}:
+    get:
+      operationId: v1.product.show
+      summary: Get an existing product
+      tags:
+        - Product
+      parameters:
+        - name: product
+          in: path
+          required: true
+          description: The uuid of the product
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+    put:
+      operationId: v1.product.edit
+      summary: Update an existing product
+      tags:
+        - Product
+      parameters:
+        - name: product
+          in: path
+          required: true
+          description: The uuid of the product
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category_uuid:
+                  type: string
+                title:
+                  type: string
+                price:
+                  type: number
+                description:
+                  type: string
+                metadata:
+                  type: object
+                  properties:
+                    brand:
+                      type: string
+                    image:
+                      type: string
+                  required:
+                    - brand
+                    - image
+              required:
+                - category_uuid
+                - title
+                - price
+                - description
+                - metadata
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+    delete:
+      operationId: v1.product.delete
+      summary: Delete an existing product
+      tags:
+        - Product
+      parameters:
+        - name: product
+          in: path
+          required: true
+          description: The uuid of the product
+          schema:
+            type: string
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /product/create:
+    post:
+      operationId: v1.product.create
+      summary: Create a product
+      tags:
+        - Product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category_uuid:
+                  type: string
+                title:
+                  type: string
+                price:
+                  type: number
+                description:
+                  type: string
+                metadata:
+                  type: object
+                  properties:
+                    brand:
+                      type: string
+                    image:
+                      type: string
+                  required:
+                    - brand
+                    - image
+              required:
+                - category_uuid
+                - title
+                - price
+                - description
+                - metadata
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /user/create:
+    post:
+      operationId: v1.user.create
+      summary: Create a user account
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                avatar:
+                  type: string
+                  format: uuid
+                address:
+                  type: string
+                phone_number:
+                  type: number
+                is_marketing:
+                  type: boolean
+                password_confirmation:
+                  type: string
+              required:
+                - first_name
+                - last_name
+                - email
+                - password
+                - address
+                - phone_number
+                - password_confirmation
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+      security:
+        - {}
+  /user:
+    get:
+      operationId: v1.user.show
+      summary: Get current authenticated user account
+      tags:
+        - User
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: string
+                  - type: string
+    delete:
+      operationId: v1.user.delete
+      summary: Delete current authenticated user account
+      tags:
+        - User
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+  /user/edit:
+    put:
+      operationId: v1.user.edit
+      summary: Update current authenticated user account
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                avatar:
+                  type: string
+                  format: uuid
+                address:
+                  type: string
+                phone_number:
+                  type: number
+                is_marketing:
+                  type: boolean
+                password_confirmation:
+                  type: string
+              required:
+                - first_name
+                - last_name
+                - email
+                - password
+                - address
+                - phone_number
+                - password_confirmation
+      responses:
+        "200":
+          "description": "OK"
+        "401":
+          "description": "Unauthorized"
+        "404":
+          "description": "Page not found"
+        "422":
+          "description": "Unprocessable Entity"
+        "500":
+          "description": "Internal server error"
+components:
+  securitySchemes:
+    http:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    PaymentType:
+      type: string
+      enum:
+        - credit_card
+        - cash_on_delivery
+        - bank_transfer
+      title: PaymentType
+  responses:
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+              - message
+              - errors
+    AuthorizationException:
+      description: Authorization error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+              - message
+    ModelNotFoundException:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+              - message

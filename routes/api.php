@@ -22,8 +22,8 @@ use App\Http\Controllers\Api\V1\OrderStatusController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
 Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
+    Route::view('/docs', 'docs');
     Route::prefix('/admin')->name('admin.')->group(function () {
         Route::post('/login', [AuthController::class, 'adminLogin'])->name('login');
         Route::middleware(['auth:api', 'is_admin'])->group(function () {
@@ -105,14 +105,17 @@ Route::prefix('/v1')->namespace("Api\V1")->name('api.v1.')->group(function () {
     });
 
     Route::middleware(['auth:api', 'is_admin'])->group(function () {
-        Route::get('/orders', [OrderController::class, 'index'])->name('order');
+        Route::prefix('/orders')->group(function () {
+            Route::get('/', [OrderController::class, 'index'])->name('order');
+            Route::get('/shipment-locator', [OrderController::class, 'shippedOrders'])->name('order.shipped');
+            Route::get('/dashboard', [OrderController::class, 'dashboard'])->name('order.dashboard');
+        });
         Route::prefix('/order')->name('order.')->group(function () {
-            Route::get('/shipment-locator', [OrderController::class, 'shippedOrders'])->name('shipped');
             Route::get('/{order}', [OrderController::class, 'show'])->name('show');
             Route::get('/{order}/download', [OrderController::class, 'downloadInvoice'])->name('download');
             Route::post('/create', [OrderController::class, 'store'])
-            ->name('create')
-            ->withoutMiddleware('is_admin');
+                ->name('create')
+                ->withoutMiddleware('is_admin');
             Route::put('/{order}', [OrderController::class, 'update'])->name('edit');
             Route::delete('/{order}', [OrderController::class, 'destroy'])->name('delete');
         });
