@@ -5,6 +5,20 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property string $uuid
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $email
+ * @property \Carbon\Carbon $email_verified_at
+ * @property string $address
+ * @property string $avatar
+ * @property string $phone_number
+ * @property bool $is_marketing
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $last_login_at
+ */
 class UserResource extends JsonResource
 {
     /**

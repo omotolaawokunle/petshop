@@ -5,6 +5,19 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property string $category_uuid
+ * @property string $title
+ * @property string $uuid
+ * @property float $price
+ * @property string $description
+ * @property array $metadata
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
+ * @property ?\App\Models\Category $category
+ * @property ?\App\Models\Brand $brand
+ */
 class ProductResource extends JsonResource
 {
     /**

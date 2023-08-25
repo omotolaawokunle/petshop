@@ -5,6 +5,10 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property \App\Models\OrderStatus $orderStatus
+ * @property \App\Models\Order $resource
+ */
 class OrderResource extends JsonResource
 {
     /**

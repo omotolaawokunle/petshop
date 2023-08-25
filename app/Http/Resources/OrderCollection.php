@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class OrderCollection extends ResourceCollection
@@ -14,9 +15,12 @@ class OrderCollection extends ResourceCollection
      */
     public $collects = OrderResource::class;
 
-    public $originalResource;
+    public LengthAwarePaginator $originalResource;
 
-    public function __construct($resource)
+    /**
+     * @param  LengthAwarePaginator $resource
+     */
+    public function __construct(LengthAwarePaginator $resource)
     {
         $this->originalResource = $resource;
 
