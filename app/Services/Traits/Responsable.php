@@ -10,11 +10,7 @@ trait Responsable
 {
     /**
      * Return success response
-     *
-     * @param  mixed        $data
-     * @param  int      $statusCode
      * @param  array<string|array|int|bool|float>        $headers
-     *
      * @return JsonResponse
      */
     public function success(
@@ -22,8 +18,7 @@ trait Responsable
         int $statusCode = 200,
         array $headers = [],
         bool $onlyData = false
-    ): JsonResponse
-    {
+    ): JsonResponse {
         //Send only data
         if ($onlyData) {
             return response()->json($data, $statusCode, $headers);
@@ -38,7 +33,6 @@ trait Responsable
 
     /**
      * Return error response
-     *
      * @param  array<string|array|int|bool|float>        $errors
      * @param  array<string|array|int|bool|float>        $data
      * @param  array<string|array|int|bool|float>        $headers
@@ -50,8 +44,7 @@ trait Responsable
         array $data = [],
         int $statusCode = 400,
         array $headers = []
-    ): JsonResponse
-    {
+    ): JsonResponse {
         return response()->json([
             'success' => 0,
             'error' => $message,

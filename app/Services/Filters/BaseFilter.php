@@ -23,11 +23,12 @@ class BaseFilter
                 continue;
             }
 
-            if (strlen($value)) {
+            if (!is_null($value) && $value) {
                 $this->$name($value);
-            } else {
-                $this->$name();
             }
+        }
+        if ($this->request->get('sortBy', null) === null) {
+            $this->builder->latest();
         }
 
         return $this->builder;
