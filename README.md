@@ -89,6 +89,7 @@ This guide will help you set up the `petshop` project. It includes steps for set
    ```
 
 2. Access the application in your web browser at `http://127.0.0.1:8000`.
+3. Access the documentation at `http://127.0.0.1:8000/api/v1/docs`.
 
 ## Additional Information
 
