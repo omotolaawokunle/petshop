@@ -64,7 +64,7 @@ class UserControllerTest extends TestCase
 
     public function test_update_user_account(): void
     {
-        $this->loginAsAdmin();
+        $this->loginAsUser();
         $response = $this->withToken($this->token)->putJson(route('api.v1.user.edit'), $this->getUserData());
         $response->assertOk();
         $response->assertJsonStructure([
@@ -82,7 +82,7 @@ class UserControllerTest extends TestCase
 
     public function test_cannot_update_user_account_with_invalid_data(): void
     {
-        $this->loginAsAdmin();
+        $this->loginAsUser();
         $response = $this->withToken($this->token)->putJson(route('api.v1.user.edit'), $this->getInvalidUserData());
         $response->assertStatus(ResponseCodes::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonValidationErrors([
@@ -92,7 +92,7 @@ class UserControllerTest extends TestCase
 
     public function test_delete_user_account(): void
     {
-        $this->loginAsAdmin();
+        $this->loginAsUser();
         $response = $this->withToken($this->token)->deleteJson(route('api.v1.user.delete'));
         $response->assertOk();
         $response = $this->withToken($this->token)->getJson(route('api.v1.user.show'));
@@ -105,20 +105,25 @@ class UserControllerTest extends TestCase
         $response->assertStatus(ResponseCodes::HTTP_UNAUTHORIZED);
     }
 
-    private function loginAsUser(): void
+    public function test_get_user_orders(): void
+    {
+        $this->loginAsUser();
+        $response = $this->withToken($this->token)->getJson(route('api.v1.user.orders'));
+        $response->assertOk();
+        $response->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'amount', 'created_at', 'delivery_fee', 'products', 'shipped_at', 'uuid', 'order_status', 'user'
+                ]
+            ]
+        ]);
+    }
+
+    private function loginAsUser(): User
     {
         $user = User::factory()->create();
         $this->token = $user->createToken('test-user-auth');
-        return;
-    }
-
-    private function loginAsAdmin(): void
-    {
-        $admin = \App\Models\User::factory([
-            'is_admin' => true
-        ])->create();
-        $this->token = $admin->createToken('test-admin-auth');
-        return;
+        return $user;
     }
 
     /**
