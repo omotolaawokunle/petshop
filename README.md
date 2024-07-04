@@ -5,7 +5,7 @@ This guide will help you set up the `petshop` project. It includes steps for set
 
 ## Prerequisites
 
-- PHP (>= 8.2)
+- PHP (>= 8.3)
 - Composer
 - MySQL
 - Git
